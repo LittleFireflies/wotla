@@ -112,25 +112,42 @@ class MainView extends StatelessWidget {
                         itemCount: state.history.length,
                       ),
                     ),
-                    TextField(
-                      onSubmitted: (answer) {
-                        context.read<GameBloc>().add(const InputSubmitted());
+                    BlocBuilder<GameBloc, GameState>(
+                      builder: (context, state) {
+                        if (state.attempts < 5) {
+                          return Row(
+                            children: [
+                              TextField(
+                                onSubmitted: (answer) {
+                                  context
+                                      .read<GameBloc>()
+                                      .add(const InputSubmitted());
+                                },
+                                onChanged: (answer) {
+                                  context
+                                      .read<GameBloc>()
+                                      .add(InputChanged(answer));
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: 'Tebak di sini',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              ElevatedButton(
+                                onPressed: () => context
+                                    .read<GameBloc>()
+                                    .add(InputSubmitted()),
+                                child: const Text('Tebak'),
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size.fromHeight(36)),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Text('Answers: ${state.correctAnswer}');
+                        }
                       },
-                      onChanged: (answer) {
-                        context.read<GameBloc>().add(InputChanged(answer));
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Tebak di sini',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () =>
-                          context.read<GameBloc>().add(InputSubmitted()),
-                      child: const Text('Tebak'),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(36)),
                     ),
                   ],
                 );

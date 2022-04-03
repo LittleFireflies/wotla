@@ -13,8 +13,12 @@ void main() {
   late DataSource dataSource;
   late GameBloc bloc;
 
+  const correctAnswer = 'Gita';
+
   setUp(() {
     dataSource = MockDataSource();
+    when(() => dataSource.getAnswer()).thenReturn('Gita');
+
     bloc = GameBloc(dataSource);
   });
 
@@ -27,6 +31,7 @@ void main() {
       const GameState(
         answer: 'ANSWER',
         history: [],
+        correctAnswer: correctAnswer,
       ),
     ],
   );
@@ -35,9 +40,6 @@ void main() {
     'add answer history '
     'when InputSubmitted event is added '
     'and answer is correct',
-    setUp: () {
-      when(() => dataSource.getAnswer()).thenReturn('Gita');
-    },
     build: () => bloc,
     act: (bloc) => bloc
       ..add(const InputChanged('Gita'))
@@ -46,11 +48,13 @@ void main() {
       const GameState(
         answer: 'GITA',
         history: [],
+        correctAnswer: correctAnswer,
       ),
       const GameState(
         answer: 'GITA',
         history: [AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')],
         attempts: 1,
+        correctAnswer: correctAnswer,
       ),
     ],
     verify: (_) {
@@ -62,9 +66,6 @@ void main() {
     'add answer history '
     'when InputSubmitted event is added '
     'and answer is incorrect',
-    setUp: () {
-      when(() => dataSource.getAnswer()).thenReturn('Gita');
-    },
     build: () => bloc,
     act: (bloc) => bloc
       ..add(const InputChanged('Gebi'))
@@ -75,16 +76,19 @@ void main() {
       const GameState(
         answer: 'GEBI',
         history: [],
+        correctAnswer: correctAnswer,
       ),
       const GameState(
         answer: 'GEBI',
         history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
         attempts: 1,
+        correctAnswer: correctAnswer,
       ),
       const GameState(
         answer: 'GITA',
         history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
         attempts: 1,
+        correctAnswer: correctAnswer,
       ),
       const GameState(
         answer: 'GITA',
@@ -93,10 +97,11 @@ void main() {
           AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA'),
         ],
         attempts: 2,
+        correctAnswer: correctAnswer,
       ),
     ],
     verify: (_) {
-      verify(() => dataSource.getAnswer()).called(2);
+      verify(() => dataSource.getAnswer()).called(1);
     },
   );
 

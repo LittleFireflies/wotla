@@ -3,11 +3,13 @@ import 'package:wotla/data/models/answer_history.dart';
 
 class GameState extends Equatable {
   final String answer;
+  final String correctAnswer;
   final List<AnswerHistory> history;
   final int attempts;
 
   const GameState({
     this.answer = '',
+    required this.correctAnswer,
     required this.history,
     this.attempts = 0,
   });
@@ -15,10 +17,11 @@ class GameState extends Equatable {
   GameState copyWith({
     String? answer,
     List<AnswerHistory>? history,
-    int? attempts
+    int? attempts,
   }) {
     return GameState(
       answer: answer ?? this.answer,
+      correctAnswer: correctAnswer,
       history: history ?? this.history,
       attempts: attempts ?? this.attempts,
     );
@@ -27,6 +30,7 @@ class GameState extends Equatable {
   @override
   List<Object?> get props => [
         answer,
+        correctAnswer,
         history,
         attempts,
       ];

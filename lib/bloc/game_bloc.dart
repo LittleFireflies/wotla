@@ -9,13 +9,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   GameBloc(DataSource dataSource)
       : _dataSource = dataSource,
-        super(const GameState(history: [])) {
+        super(GameState(history: [], correctAnswer: dataSource.getAnswer())) {
     on<InputChanged>((event, emit) {
       emit(state.copyWith(answer: event.answer.toUpperCase()));
     });
     on<InputSubmitted>((event, emit) {
       final result =
-          checkAnswer(_dataSource.getAnswer().toUpperCase(), state.answer);
+          checkAnswer(state.correctAnswer.toUpperCase(), state.answer);
       final history = [
         ...state.history,
         AnswerHistory(answer: state.answer, answerIdentifier: result)
