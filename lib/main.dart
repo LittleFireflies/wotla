@@ -62,66 +62,71 @@ class MainView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: SizedBox(
-            width: 480,
-            child: BlocBuilder<GameBloc, GameState>(
-              builder: (context, state) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(
-                            child: Image.network(
-                              'https://jkt48.com/images/oglogo.png',
-                              width: 200,
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: SizedBox(
+              width: 480,
+              child: BlocBuilder<GameBloc, GameState>(
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: Image.network(
+                                'https://jkt48.com/images/oglogo.png',
+                                width: 200,
+                              ),
                             ),
-                          ),
-                          SliverList(
-                            delegate:
-                                SliverChildBuilderDelegate((context, index) {
-                              final history = state.history[index];
-                              var charIndex = 0;
+                            SliverList(
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                                final history = state.history[index];
+                                var charIndex = 0;
 
-                              return Card(
-                                color: const Color(0xFFFF99BB),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: history.answerIdentifier
-                                        .toChars()
-                                        .map((char) {
-                                      final widget = Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          history.answer[charIndex],
-                                          style: TextStyle(
-                                            color: char == 'X'
-                                                ? Colors.black
-                                                : char == '+'
-                                                    ? Colors.yellowAccent
-                                                    : Colors.green,
+                                return Card(
+                                  color: const Color(0xFFFF99BB),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: history.answerIdentifier
+                                          .toChars()
+                                          .map((char) {
+                                        final widget = Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            history.answer[charIndex],
+                                            style: TextStyle(
+                                              color: char == 'X'
+                                                  ? Colors.black
+                                                  : char == '+'
+                                                      ? Colors.yellowAccent
+                                                      : Colors.green,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                      charIndex++;
-                                      return widget;
-                                    }).toList(),
+                                        );
+                                        charIndex++;
+                                        return widget;
+                                      }).toList(),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }, childCount: state.history.length),
-                          ),
-                        ],
+                                );
+                              }, childCount: state.history.length),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const _WotlaInput(),
-                  ],
-                );
-              },
+                      const _WotlaInput(),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -168,6 +173,7 @@ class _WotlaInputState extends State<_WotlaInput> {
                 onPressed: () {
                   context.read<GameBloc>().add(const InputSubmitted());
                   _inputController.text = '';
+                  FocusScope.of(context).unfocus();
                 },
                 child: const Text('Tebak'),
                 style: ElevatedButton.styleFrom(
