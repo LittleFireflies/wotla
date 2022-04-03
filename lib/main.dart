@@ -71,48 +71,54 @@ class MainView extends StatelessWidget {
               builder: (context, state) {
                 return Column(
                   children: [
-                    Image.network(
-                      'https://jkt48.com/images/oglogo.png',
-                      width: 200,
-                    ),
                     Expanded(
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          final history = state.history[index];
-                          var charIndex = 0;
-
-                          return Card(
-                            color: const Color(0xFFFF99BB),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: history.answerIdentifier
-                                    .toChars()
-                                    .map((char) {
-                                  final widget = Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      history.answer[charIndex],
-                                      style: TextStyle(
-                                        color: char == 'X'
-                                            ? Colors.black
-                                            : char == '+'
-                                                ? Colors.yellowAccent
-                                                : Colors.green,
-                                      ),
-                                    ),
-                                  );
-                                  charIndex++;
-                                  return widget;
-                                }).toList(),
-                              ),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: Image.network(
+                              'https://jkt48.com/images/oglogo.png',
+                              width: 200,
                             ),
-                          );
-                        },
-                        itemCount: state.history.length,
+                          ),
+                          SliverList(
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                              final history = state.history[index];
+                              var charIndex = 0;
+
+                              return Card(
+                                color: const Color(0xFFFF99BB),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: history.answerIdentifier
+                                        .toChars()
+                                        .map((char) {
+                                      final widget = Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          history.answer[charIndex],
+                                          style: TextStyle(
+                                            color: char == 'X'
+                                                ? Colors.black
+                                                : char == '+'
+                                                    ? Colors.yellowAccent
+                                                    : Colors.green,
+                                          ),
+                                        ),
+                                      );
+                                      charIndex++;
+                                      return widget;
+                                    }).toList(),
+                                  ),
+                                ),
+                              );
+                            }, childCount: state.history.length),
+                          ),
+                        ],
                       ),
                     ),
-                    _WotlaInput(),
+                    const _WotlaInput(),
                   ],
                 );
               },
