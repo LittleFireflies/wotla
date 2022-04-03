@@ -61,6 +61,36 @@ class MainView extends StatelessWidget {
         title: const Text('WOTLA'),
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Cara Bermain'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Tebak WOTLA dalam 5 kesempatan.'),
+                        SizedBox(height: 8),
+                        Text(
+                            'Jawaban merupakan nama panggilan member JKT48 yang terdaftar pada web jkt48.com.'),
+                        SizedBox(height: 8),
+                        Text(
+                            'Setelah jawaban dikirimkan, warna huruf akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan jawabannya.'),
+                        SizedBox(height: 8),
+                        Text(
+                            'Jika huruf berwarna hijau, maka huruf tersebut telah berada pada posisi yang tepat.'),
+                        Text(
+                            'Jika huruf berwarna kuning, maka huruf tersebut terdapat pada jawaban, namun posisinya belum tepat.'),
+                      ],
+                    ),
+                  );
+                });
+          },
+          icon: const Icon(Icons.help_outline),
+        ),
       ),
       body: GestureDetector(
         onTap: () {
