@@ -12,3 +12,10 @@ class InputChanged extends GameEvent {
   @override
   List<Object?> get props => [answer];
 }
+
+class InputSubmitted extends GameEvent {
+  const InputSubmitted();
+
+  @override
+  List<Object?> get props => [];
+}
