@@ -114,8 +114,8 @@ class MainView extends StatelessWidget {
                     ),
                     BlocBuilder<GameBloc, GameState>(
                       builder: (context, state) {
-                        if (state.attempts < 5) {
-                          return Row(
+                        if (state.attempts < 5 && !state.correct) {
+                          return Column(
                             children: [
                               TextField(
                                 onSubmitted: (answer) {
@@ -145,7 +145,11 @@ class MainView extends StatelessWidget {
                             ],
                           );
                         } else {
-                          return Text('Answers: ${state.correctAnswer}');
+                          return Text(
+                            '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
+                            style: Theme.of(context).textTheme.headline6,
+                            textAlign: TextAlign.center,
+                          );
                         }
                       },
                     ),

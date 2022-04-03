@@ -22,9 +22,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       ];
       final attempts = state.attempts + 1;
 
+      final correct = result == state.answer;
+
       emit(state.copyWith(
         history: history,
         attempts: attempts,
+        correct: correct,
       ));
     });
   }

@@ -6,24 +6,28 @@ class GameState extends Equatable {
   final String correctAnswer;
   final List<AnswerHistory> history;
   final int attempts;
+  final bool correct;
 
   const GameState({
     this.answer = '',
     required this.correctAnswer,
     required this.history,
     this.attempts = 0,
+    this.correct = false,
   });
 
   GameState copyWith({
     String? answer,
     List<AnswerHistory>? history,
     int? attempts,
+    bool? correct,
   }) {
     return GameState(
       answer: answer ?? this.answer,
       correctAnswer: correctAnswer,
       history: history ?? this.history,
       attempts: attempts ?? this.attempts,
+      correct: correct ?? this.correct,
     );
   }
 
@@ -33,5 +37,6 @@ class GameState extends Equatable {
         correctAnswer,
         history,
         attempts,
+        correct,
       ];
 }
