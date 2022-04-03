@@ -50,6 +50,7 @@ void main() {
       const GameState(
         answer: 'GITA',
         history: [AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')],
+        attempts: 1,
       ),
     ],
     verify: (_) {
@@ -67,6 +68,8 @@ void main() {
     build: () => bloc,
     act: (bloc) => bloc
       ..add(const InputChanged('Gebi'))
+      ..add(const InputSubmitted())
+      ..add(const InputChanged('Gita'))
       ..add(const InputSubmitted()),
     expect: () => [
       const GameState(
@@ -76,10 +79,24 @@ void main() {
       const GameState(
         answer: 'GEBI',
         history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
+        attempts: 1,
+      ),
+      const GameState(
+        answer: 'GITA',
+        history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
+        attempts: 1,
+      ),
+      const GameState(
+        answer: 'GITA',
+        history: [
+          AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+'),
+          AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA'),
+        ],
+        attempts: 2,
       ),
     ],
     verify: (_) {
-      verify(() => dataSource.getAnswer()).called(1);
+      verify(() => dataSource.getAnswer()).called(2);
     },
   );
 

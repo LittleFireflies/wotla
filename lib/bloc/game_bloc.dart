@@ -20,8 +20,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         ...state.history,
         AnswerHistory(answer: state.answer, answerIdentifier: result)
       ];
+      final attempts = state.attempts + 1;
 
-      emit(state.copyWith(history: history));
+      emit(state.copyWith(
+        history: history,
+        attempts: attempts,
+      ));
     });
   }
 
