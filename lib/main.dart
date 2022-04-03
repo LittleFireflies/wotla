@@ -112,47 +112,7 @@ class MainView extends StatelessWidget {
                         itemCount: state.history.length,
                       ),
                     ),
-                    BlocBuilder<GameBloc, GameState>(
-                      builder: (context, state) {
-                        if (state.attempts < 5 && !state.correct) {
-                          return Column(
-                            children: [
-                              TextField(
-                                onSubmitted: (answer) {
-                                  context
-                                      .read<GameBloc>()
-                                      .add(const InputSubmitted());
-                                },
-                                onChanged: (answer) {
-                                  context
-                                      .read<GameBloc>()
-                                      .add(InputChanged(answer));
-                                },
-                                decoration: const InputDecoration(
-                                  hintText: 'Tebak di sini',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              ElevatedButton(
-                                onPressed: () => context
-                                    .read<GameBloc>()
-                                    .add(InputSubmitted()),
-                                child: const Text('Tebak'),
-                                style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size.fromHeight(36)),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Text(
-                            '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
-                            style: Theme.of(context).textTheme.headline6,
-                            textAlign: TextAlign.center,
-                          );
-                        }
-                      },
-                    ),
+                    _WotlaInput(),
                   ],
                 );
               },
@@ -161,5 +121,68 @@ class MainView extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _WotlaInput extends StatefulWidget {
+  const _WotlaInput({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<_WotlaInput> createState() => _WotlaInputState();
+}
+
+class _WotlaInputState extends State<_WotlaInput> {
+  final _inputController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GameBloc, GameState>(
+      builder: (context, state) {
+        if (state.attempts < 5 && !state.correct) {
+          return Column(
+            children: [
+              TextField(
+                controller: _inputController,
+                onSubmitted: (answer) {
+                  context.read<GameBloc>().add(const InputSubmitted());
+                  _inputController.text = '';
+                },
+                onChanged: (answer) {
+                  context.read<GameBloc>().add(InputChanged(answer));
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Tebak di sini',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<GameBloc>().add(const InputSubmitted());
+                  _inputController.text = '';
+                },
+                child: const Text('Tebak'),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(36)),
+              ),
+            ],
+          );
+        } else {
+          return Text(
+            '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
+            style: Theme.of(context).textTheme.headline6,
+            textAlign: TextAlign.center,
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
   }
 }
