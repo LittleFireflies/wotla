@@ -6,6 +6,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/utils/const.dart';
 
 class MockDataSource extends Mock implements DataSource {}
 
@@ -20,6 +21,9 @@ void main() {
     when(() => dataSource.getAnswer()).thenReturn('Gita');
 
     bloc = GameBloc(dataSource);
+
+    when(() => dataSource.loadMemberList())
+        .thenReturn(['GITA', 'MARSHA', 'CHRISTY', 'GABY']);
   });
 
   blocTest<GameBloc, GameState>(
@@ -55,6 +59,7 @@ void main() {
         history: [AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')],
         attempts: 1,
         correctAnswer: correctAnswer,
+        correct: true,
       ),
     ],
     verify: (_) {
@@ -68,9 +73,34 @@ void main() {
     'and answer is incorrect',
     build: () => bloc,
     act: (bloc) => bloc
+      ..add(const InputChanged('Gaby'))
+      ..add(const InputSubmitted()),
+    expect: () => [
+      const GameState(
+        answer: 'GABY',
+        history: [],
+        correctAnswer: correctAnswer,
+      ),
+      const GameState(
+        answer: 'GABY',
+        history: [AnswerHistory(answer: 'GABY', answerIdentifier: 'G+XX')],
+        attempts: 1,
+        correctAnswer: correctAnswer,
+        correct: false,
+      ),
+    ],
+    verify: (_) {
+      verify(() => dataSource.getAnswer()).called(1);
+    },
+  );
+
+  blocTest<GameBloc, GameState>(
+    'add answer history '
+    'when InputSubmitted event is added '
+    'and answer is not exist in data pool',
+    build: () => bloc,
+    act: (bloc) => bloc
       ..add(const InputChanged('Gebi'))
-      ..add(const InputSubmitted())
-      ..add(const InputChanged('Gita'))
       ..add(const InputSubmitted()),
     expect: () => [
       const GameState(
@@ -80,24 +110,54 @@ void main() {
       ),
       const GameState(
         answer: 'GEBI',
-        history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
-        attempts: 1,
+        history: [],
+        attempts: 0,
         correctAnswer: correctAnswer,
+        error: WotlaConst.invalidAnswerMessage,
       ),
-      const GameState(
-        answer: 'GITA',
-        history: [AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+')],
-        attempts: 1,
+    ],
+    verify: (_) {
+      verify(() => dataSource.getAnswer()).called(1);
+    },
+  );
+
+  blocTest<GameBloc, GameState>(
+    'add answer history '
+    'when InputSubmitted event is added '
+    'and answer is already submitted',
+    setUp: () {
+      when(() => dataSource.loadMemberList()).thenReturn(['GITA', 'CHRISTY']);
+    },
+    seed: () {
+      return const GameState(
         correctAnswer: correctAnswer,
-      ),
-      const GameState(
-        answer: 'GITA',
         history: [
-          AnswerHistory(answer: 'GEBI', answerIdentifier: 'GXX+'),
-          AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA'),
+          AnswerHistory(answer: 'CHRISTY', answerIdentifier: 'XXX+XXX'),
         ],
-        attempts: 2,
+        attempts: 1,
+      );
+    },
+    build: () => bloc,
+    act: (bloc) => bloc
+      ..add(const InputChanged('Christy'))
+      ..add(const InputSubmitted()),
+    expect: () => [
+      const GameState(
+        answer: 'CHRISTY',
+        history: [
+          AnswerHistory(answer: 'CHRISTY', answerIdentifier: 'XXX+XXX'),
+        ],
+        attempts: 1,
         correctAnswer: correctAnswer,
+      ),
+      const GameState(
+        answer: 'CHRISTY',
+        history: [
+          AnswerHistory(answer: 'CHRISTY', answerIdentifier: 'XXX+XXX'),
+        ],
+        attempts: 1,
+        correctAnswer: correctAnswer,
+        error: WotlaConst.submittedAnswerMessage,
       ),
     ],
     verify: (_) {

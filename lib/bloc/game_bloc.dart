@@ -3,6 +3,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/utils/const.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
@@ -18,10 +19,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           state.history.map((history) => history.answer).toList();
 
       if (!_dataSource.loadMemberList().contains(state.answer)) {
-        emit(state.copyWith(
-            error: 'Itu siapa? Pastikan jawabanmu nama panggilan member ya'));
+        emit(state.copyWith(error: WotlaConst.invalidAnswerMessage));
       } else if (historyAnswers.contains(state.answer)) {
-        emit(state.copyWith(error: 'Jawaban sudah pernah di-submit'));
+        emit(state.copyWith(error: WotlaConst.submittedAnswerMessage));
       } else {
         final result =
             checkAnswer(state.correctAnswer.toUpperCase(), state.answer);
