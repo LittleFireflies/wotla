@@ -1,6 +1,6 @@
-# wotla
+# WOTLA
 
-A new Flutter project.
+WOTLA - Tebak Member JKT48
 
 ## Getting Started
 

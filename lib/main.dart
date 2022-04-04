@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wotla/bloc/game_bloc.dart';
 import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
+import 'package:wotla/data/models/answer_history.dart';
 
 void main() {
   runApp(const MyApp());
@@ -122,7 +124,7 @@ class MainView extends StatelessWidget {
                             SliverToBoxAdapter(
                               child: Image.network(
                                 'https://jkt48.com/images/oglogo.png',
-                                width: 200,
+                                height: 200,
                               ),
                             ),
                             SliverList(
@@ -223,14 +225,49 @@ class _WotlaInputState extends State<_WotlaInput> {
             ],
           );
         } else {
-          return Text(
-            '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
-            style: Theme.of(context).textTheme.headline6,
-            textAlign: TextAlign.center,
+          return Column(
+            children: [
+              Text(
+                '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
+                style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Share.share(_getShareText(state.history, state.correct));
+                },
+                icon: const Icon(Icons.share),
+                label: const Text('Share'),
+              ),
+            ],
           );
         }
       },
     );
+  }
+
+  String _getShareText(List<AnswerHistory> history, bool correct) {
+    var text = 'WOTLA ${!correct ? 'X' : history.length}/5\n';
+    text += '\n';
+
+    for (int i = 0; i < history.length; i++) {
+      final whiteRegex = RegExp(r'X');
+      final yellowRegex = RegExp(r'\+');
+      final greenRegex = RegExp(r'[a-zA-Z]');
+
+      var line = history[i].answerIdentifier.replaceAll(whiteRegex, '⬜️');
+      line = line.replaceAll(yellowRegex, '🟨');
+      line = line.replaceAll(greenRegex, '🟩');
+      line += '\n';
+
+      text += line;
+    }
+
+    text += '\n';
+    text += 'https://wotla.widdyjp.dev';
+
+    return text;
   }
 
   @override
