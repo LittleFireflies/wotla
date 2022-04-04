@@ -228,7 +228,7 @@ class _WotlaInputState extends State<_WotlaInput> {
           return Column(
             children: [
               Text(
-                '${state.correct ? "Kamu Benar" : "Kesempatanmu habis"}!!! \nJawabannya: ${state.correctAnswer}',
+                '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
                 style: Theme.of(context).textTheme.headline6,
                 textAlign: TextAlign.center,
               ),
