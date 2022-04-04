@@ -101,7 +101,18 @@ class MainView extends StatelessWidget {
           child: Center(
             child: SizedBox(
               width: 480,
-              child: BlocBuilder<GameBloc, GameState>(
+              child: BlocConsumer<GameBloc, GameState>(
+                listener: (context, state) {
+                  final error = state.error;
+                  if (error != null) {
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(
+                        content: Text(error),
+                        dismissDirection: DismissDirection.horizontal,
+                      ));
+                  }
+                },
                 builder: (context, state) {
                   return Column(
                     children: [

@@ -8,7 +8,9 @@ class DataSource {
   }
 
   List<String> loadMemberList() {
-    return memberList.map((member) => member["name"] ?? "").toList();
+    return memberList
+        .map((member) => (member["name"] ?? "").toUpperCase())
+        .toList();
   }
 
   final memberList = [

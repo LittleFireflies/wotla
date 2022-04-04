@@ -14,21 +14,31 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       emit(state.copyWith(answer: event.answer.toUpperCase()));
     });
     on<InputSubmitted>((event, emit) {
-      final result =
-          checkAnswer(state.correctAnswer.toUpperCase(), state.answer);
-      final history = [
-        ...state.history,
-        AnswerHistory(answer: state.answer, answerIdentifier: result)
-      ];
-      final attempts = state.attempts + 1;
+      final historyAnswers =
+          state.history.map((history) => history.answer).toList();
 
-      final correct = result == state.answer;
+      if (!_dataSource.loadMemberList().contains(state.answer)) {
+        emit(state.copyWith(
+            error: 'Itu siapa? Pastikan jawabanmu nama panggilan member ya'));
+      } else if (historyAnswers.contains(state.answer)) {
+        emit(state.copyWith(error: 'Jawaban sudah pernah di-submit'));
+      } else {
+        final result =
+            checkAnswer(state.correctAnswer.toUpperCase(), state.answer);
+        final history = [
+          ...state.history,
+          AnswerHistory(answer: state.answer, answerIdentifier: result)
+        ];
+        final attempts = state.attempts + 1;
 
-      emit(state.copyWith(
-        history: history,
-        attempts: attempts,
-        correct: correct,
-      ));
+        final correct = result == state.answer;
+
+        emit(state.copyWith(
+          history: history,
+          attempts: attempts,
+          correct: correct,
+        ));
+      }
     });
   }
 
@@ -63,7 +73,7 @@ extension StringExtension on String {
   List<String> toChars() {
     final chars = <String>[];
 
-    for (int i = 0; i < this.length; i++) {
+    for (int i = 0; i < length; i++) {
       chars.add(this[i]);
     }
 
