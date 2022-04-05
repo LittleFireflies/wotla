@@ -10,15 +10,17 @@ class WotlaSharedPreferences {
 
   const WotlaSharedPreferences(this.sharedPreferences);
 
+  static const String _userRecordsKey = 'user_records';
+
   Future<void> saveTodayRecord(UserRecords records) async {
     final prefs = await sharedPreferences;
-    await prefs.setString('user_records', json.encode(records.toJson()));
+    await prefs.setString(_userRecordsKey, json.encode(records.toJson()));
   }
 
   Future<UserRecords?> readUserRecords() async {
     final prefs = await sharedPreferences;
     final Map<String, dynamic> userJson =
-        json.decode(prefs.getString('user_records') ?? "{}");
+        json.decode(prefs.getString(_userRecordsKey) ?? "{}");
 
     if (userJson.isEmpty) {
       return null;
