@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wotla/bloc/game_bloc.dart';
 import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/providers/date_provider.dart';
+import 'package:wotla/data/repositories/wotla_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: MainPage(),
+      home: const MainPage(),
     );
   }
 }
@@ -44,9 +48,21 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameBloc(DataSource()),
-      child: const MainView(),
+    return RepositoryProvider(
+      create: (context) => DateProvider(),
+      child: BlocProvider(
+        create: (context) => GameBloc(
+          dataSource: DataSource(),
+          repository: WotlaRepository(
+            WotlaSharedPreferences(
+              SharedPreferences.getInstance(),
+            ),
+            context.read<DateProvider>(),
+          ),
+          dateProvider: context.read<DateProvider>(),
+        )..add(const LoadRecord()),
+        child: const MainView(),
+      ),
     );
   }
 }
@@ -69,11 +85,11 @@ class MainView extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text('Cara Bermain'),
+                    title: const Text('Cara Bermain'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text('Tebak WOTLA dalam 5 kesempatan.'),
                         SizedBox(height: 8),
                         Text(
@@ -231,6 +247,19 @@ class _WotlaInputState extends State<_WotlaInput> {
                 '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
                 style: Theme.of(context).textTheme.headline6,
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              CountdownTimer(
+                endTime: state.nextGameTime?.millisecondsSinceEpoch ??
+                    DateProvider().tomorrow.millisecondsSinceEpoch,
+                widgetBuilder: (context, time) {
+                  if (time == null) {
+                    return const Text(
+                        'Silakan ulang dengan me-restart halaman web');
+                  }
+                  return Text(
+                      'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(2, '0')} : ${time.sec.toString().padLeft(2, '0')}');
+                },
               ),
               const SizedBox(height: 8),
               ElevatedButton.icon(

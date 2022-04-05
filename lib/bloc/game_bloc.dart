@@ -3,14 +3,38 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/models/user_daily_record.dart';
+import 'package:wotla/data/providers/date_provider.dart';
+import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
+  final WotlaRepository _repository;
+  final DateProvider _dateProvider;
 
-  GameBloc(DataSource dataSource)
-      : _dataSource = dataSource,
-        super(GameState(history: [], correctAnswer: dataSource.getAnswer())) {
+  GameBloc({
+    required DataSource dataSource,
+    required WotlaRepository repository,
+    required DateProvider dateProvider,
+  })  : _dataSource = dataSource,
+        _repository = repository,
+        _dateProvider = dateProvider,
+        super(GameState(
+            history: const [], correctAnswer: dataSource.getAnswer())) {
+    on<LoadRecord>((event, emit) async {
+      final records = await _repository.readTodayRecord();
+
+      if (records != null) {
+        emit(state.copyWith(
+          history: records.histories,
+          attempts: records.histories.length,
+          correctAnswer: records.correctAnswer,
+          correct: records.correct,
+          nextGameTime: _dateProvider.tomorrow,
+        ));
+      }
+    });
     on<InputChanged>((event, emit) {
       emit(state.copyWith(answer: event.answer.toUpperCase()));
     });
@@ -33,10 +57,18 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         final correct = result == state.answer;
 
+        _repository.saveTodayRecord(UserDailyRecord(
+          histories: history,
+          date: _dateProvider.today,
+          correct: correct,
+          correctAnswer: state.correctAnswer,
+        ));
+
         emit(state.copyWith(
           history: history,
           attempts: attempts,
           correct: correct,
+          nextGameTime: _dateProvider.tomorrow,
         ));
       }
     });
