@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_record.dart';
+part of 'user_daily_record.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserRecord _$UserRecordFromJson(Map<String, dynamic> json) => UserRecord(
+UserDailyRecord _$UserDailyRecordFromJson(Map<String, dynamic> json) =>
+    UserDailyRecord(
       date: DateTime.parse(json['date'] as String),
       histories: (json['histories'] as List<dynamic>)
           .map((e) => AnswerHistory.fromJson(e as Map<String, dynamic>))
@@ -15,7 +16,7 @@ UserRecord _$UserRecordFromJson(Map<String, dynamic> json) => UserRecord(
       correctAnswer: json['correctAnswer'] as String,
     );
 
-Map<String, dynamic> _$UserRecordToJson(UserRecord instance) =>
+Map<String, dynamic> _$UserDailyRecordToJson(UserDailyRecord instance) =>
     <String, dynamic>{
       'date': instance.date.toIso8601String(),
       'histories': instance.histories,

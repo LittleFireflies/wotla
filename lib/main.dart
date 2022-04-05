@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wotla/bloc/game_bloc.dart';
 import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/repositories/date_repository.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 
 void main() {
@@ -45,14 +47,21 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameBloc(
-        DataSource(),
-        WotlaRepository(
-          WotlaSharedPreferences(),
-        ),
-      )..add(const LoadRecord()),
-      child: const MainView(),
+    return RepositoryProvider(
+      create: (context) => DateRepository(),
+      child: BlocProvider(
+        create: (context) => GameBloc(
+          dataSource: DataSource(),
+          repository: WotlaRepository(
+            WotlaSharedPreferences(
+              SharedPreferences.getInstance(),
+            ),
+            context.read<DateRepository>(),
+          ),
+          dateRepository: context.read<DateRepository>(),
+        )..add(const LoadRecord()),
+        child: const MainView(),
+      ),
     );
   }
 }

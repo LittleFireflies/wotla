@@ -1,37 +1,58 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wotla/data/models/user_record.dart';
+import 'package:wotla/data/models/user_daily_record.dart';
+import 'package:wotla/data/models/user_records.dart';
+import 'package:wotla/data/repositories/date_repository.dart';
 
 class WotlaSharedPreferences {
-  void saveTodayRecord(UserRecord record) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_records', json.encode(record.toJson()));
+  final Future<SharedPreferences> sharedPreferences;
+
+  const WotlaSharedPreferences(this.sharedPreferences);
+
+  Future<void> saveTodayRecord(UserRecords records) async {
+    final prefs = await sharedPreferences;
+    await prefs.setString('user_records', json.encode(records.toJson()));
   }
 
-  Future<UserRecord?> readUserRecord() async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<UserRecords?> readUserRecords() async {
+    final prefs = await sharedPreferences;
     final Map<String, dynamic> userJson =
         json.decode(prefs.getString('user_records') ?? "{}");
 
     if (userJson.isEmpty) {
       return null;
     } else {
-      return UserRecord.fromJson(userJson);
+      return UserRecords.fromJson(userJson);
     }
   }
 }
 
 class WotlaRepository {
   final WotlaSharedPreferences sharedPreferences;
+  final DateRepository dateRepository;
 
-  const WotlaRepository(this.sharedPreferences);
+  const WotlaRepository(this.sharedPreferences, this.dateRepository);
 
-  void saveTodayRecord(UserRecord record) {
-    sharedPreferences.saveTodayRecord(record);
+  Future<void> saveTodayRecord(UserDailyRecord record) async {
+    final records = await readUserRecords();
+
+    records?.records[record.date.toIso8601String()] = record;
+
+    await sharedPreferences.saveTodayRecord(records ??
+        UserRecords({
+          record.date.toIso8601String(): record,
+        }));
   }
 
-  Future<UserRecord?> readUserRecord() async {
-    return await sharedPreferences.readUserRecord();
+  Future<UserRecords?> readUserRecords() async {
+    final records = await sharedPreferences.readUserRecords();
+    return records;
+  }
+
+  Future<UserDailyRecord?> readTodayRecord() async {
+    final records = await readUserRecords();
+
+    return records?.records[dateRepository.today.toIso8601String()];
   }
 }

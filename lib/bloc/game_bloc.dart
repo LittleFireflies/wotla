@@ -3,20 +3,26 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
-import 'package:wotla/data/models/user_record.dart';
+import 'package:wotla/data/models/user_daily_record.dart';
+import 'package:wotla/data/repositories/date_repository.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
   final WotlaRepository _repository;
+  final DateRepository _dateRepository;
 
-  GameBloc(DataSource dataSource, WotlaRepository repository)
-      : _dataSource = dataSource,
+  GameBloc({
+    required DataSource dataSource,
+    required WotlaRepository repository,
+    required DateRepository dateRepository,
+  })  : _dataSource = dataSource,
         _repository = repository,
+        _dateRepository = dateRepository,
         super(GameState(history: [], correctAnswer: dataSource.getAnswer())) {
     on<LoadRecord>((event, emit) async {
-      final records = await _repository.readUserRecord();
+      final records = await _repository.readTodayRecord();
 
       if (records != null) {
         emit(state.copyWith(
@@ -49,9 +55,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         final correct = result == state.answer;
 
-        _repository.saveTodayRecord(UserRecord(
+        _repository.saveTodayRecord(UserDailyRecord(
           histories: history,
-          date: DateTime.now(),
+          date: _dateRepository.today,
           correct: correct,
           correctAnswer: state.correctAnswer,
         ));
