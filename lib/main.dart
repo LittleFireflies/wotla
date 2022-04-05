@@ -8,7 +8,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
-import 'package:wotla/data/repositories/date_repository.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 
 void main() {
@@ -49,7 +49,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => DateRepository(),
+      create: (context) => DateProvider(),
       child: BlocProvider(
         create: (context) => GameBloc(
           dataSource: DataSource(),
@@ -57,9 +57,9 @@ class MainPage extends StatelessWidget {
             WotlaSharedPreferences(
               SharedPreferences.getInstance(),
             ),
-            context.read<DateRepository>(),
+            context.read<DateProvider>(),
           ),
-          dateRepository: context.read<DateRepository>(),
+          dateProvider: context.read<DateProvider>(),
         )..add(const LoadRecord()),
         child: const MainView(),
       ),
@@ -251,7 +251,7 @@ class _WotlaInputState extends State<_WotlaInput> {
               const SizedBox(height: 8),
               CountdownTimer(
                 endTime: state.nextGameTime?.millisecondsSinceEpoch ??
-                    DateRepository().tomorrow.millisecondsSinceEpoch,
+                    DateProvider().tomorrow.millisecondsSinceEpoch,
                 widgetBuilder: (context, time) {
                   if (time == null) {
                     return const Text(

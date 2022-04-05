@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_records.dart';
-import 'package:wotla/data/repositories/date_repository.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 
 class WotlaSharedPreferences {
   final Future<SharedPreferences> sharedPreferences;
@@ -32,9 +32,9 @@ class WotlaSharedPreferences {
 
 class WotlaRepository {
   final WotlaSharedPreferences sharedPreferences;
-  final DateRepository dateRepository;
+  final DateProvider dateProvider;
 
-  const WotlaRepository(this.sharedPreferences, this.dateRepository);
+  const WotlaRepository(this.sharedPreferences, this.dateProvider);
 
   Future<void> saveTodayRecord(UserDailyRecord record) async {
     final records = await readUserRecords();
@@ -55,6 +55,6 @@ class WotlaRepository {
   Future<UserDailyRecord?> readTodayRecord() async {
     final records = await readUserRecords();
 
-    return records?.records[dateRepository.today.toIso8601String()];
+    return records?.records[dateProvider.today.toIso8601String()];
   }
 }

@@ -1,4 +1,4 @@
-class DateRepository {
+class DateProvider {
   DateTime get today {
     final now = DateTime.now();
 

@@ -4,22 +4,22 @@ import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
-import 'package:wotla/data/repositories/date_repository.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
   final WotlaRepository _repository;
-  final DateRepository _dateRepository;
+  final DateProvider _dateProvider;
 
   GameBloc({
     required DataSource dataSource,
     required WotlaRepository repository,
-    required DateRepository dateRepository,
+    required DateProvider dateProvider,
   })  : _dataSource = dataSource,
         _repository = repository,
-        _dateRepository = dateRepository,
+        _dateProvider = dateProvider,
         super(GameState(
             history: const [], correctAnswer: dataSource.getAnswer())) {
     on<LoadRecord>((event, emit) async {
@@ -31,7 +31,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           attempts: records.histories.length,
           correctAnswer: records.correctAnswer,
           correct: records.correct,
-          nextGameTime: _dateRepository.tomorrow,
+          nextGameTime: _dateProvider.tomorrow,
         ));
       }
     });
@@ -59,7 +59,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         _repository.saveTodayRecord(UserDailyRecord(
           histories: history,
-          date: _dateRepository.today,
+          date: _dateProvider.today,
           correct: correct,
           correctAnswer: state.correctAnswer,
         ));
@@ -68,7 +68,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           history: history,
           attempts: attempts,
           correct: correct,
-          nextGameTime: _dateRepository.today.add(const Duration(days: 1)),
+          nextGameTime: _dateProvider.today.add(const Duration(days: 1)),
         ));
       }
     });

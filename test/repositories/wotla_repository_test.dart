@@ -3,19 +3,19 @@ import 'package:mocktail/mocktail.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_records.dart';
-import 'package:wotla/data/repositories/date_repository.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 
 class MockSharedPrefs extends Mock implements WotlaSharedPreferences {}
 
-class MockDateRepository extends Mock implements DateRepository {}
+class MockDateProvider extends Mock implements DateProvider {}
 
 class FakeUserRecords extends Fake implements UserRecords {}
 
 void main() {
   group('WotlaRepository', () {
     late WotlaSharedPreferences sharedPreferences;
-    late DateRepository dateRepository;
+    late DateProvider dateProvider;
     late WotlaRepository repository;
 
     final today = DateTime(2022, 4, 4);
@@ -48,10 +48,10 @@ void main() {
 
     setUp(() {
       sharedPreferences = MockSharedPrefs();
-      dateRepository = MockDateRepository();
-      repository = WotlaRepository(sharedPreferences, dateRepository);
+      dateProvider = MockDateProvider();
+      repository = WotlaRepository(sharedPreferences, dateProvider);
 
-      when(() => dateRepository.today).thenReturn(today);
+      when(() => dateProvider.today).thenReturn(today);
     });
 
     setUpAll(() {

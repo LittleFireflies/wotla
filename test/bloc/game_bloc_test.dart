@@ -6,7 +6,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
-import 'package:wotla/data/repositories/date_repository.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
@@ -14,11 +14,11 @@ class MockDataSource extends Mock implements DataSource {}
 
 class MockRepository extends Mock implements WotlaRepository {}
 
-class MockDateRepository extends Mock implements DateRepository {}
+class MockDateProvider extends Mock implements DateProvider {}
 
 void main() {
   late DataSource dataSource;
-  late DateRepository dateRepository;
+  late DateProvider dateProvider;
   late WotlaRepository repository;
   late GameBloc bloc;
 
@@ -26,19 +26,19 @@ void main() {
 
   setUp(() {
     dataSource = MockDataSource();
-    dateRepository = MockDateRepository();
+    dateProvider = MockDateProvider();
     repository = MockRepository();
     when(() => dataSource.getAnswer()).thenReturn('Gita');
 
     bloc = GameBloc(
       dataSource: dataSource,
       repository: repository,
-      dateRepository: dateRepository,
+      dateProvider: dateProvider,
     );
 
     when(() => dataSource.loadMemberList())
         .thenReturn(['GITA', 'MARSHA', 'CHRISTY', 'GABY']);
-    when(() => dateRepository.today).thenReturn(DateTime(2022, 4, 4));
+    when(() => dateProvider.today).thenReturn(DateTime(2022, 4, 4));
   });
 
   blocTest<GameBloc, GameState>(
@@ -187,7 +187,7 @@ void main() {
       wotla = GameBloc(
         dataSource: dataSource,
         repository: repository,
-        dateRepository: dateRepository,
+        dateProvider: dateProvider,
       );
     });
 
