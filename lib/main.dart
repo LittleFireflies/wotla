@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wotla/bloc/game_bloc.dart';
@@ -246,6 +247,19 @@ class _WotlaInputState extends State<_WotlaInput> {
                 '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
                 style: Theme.of(context).textTheme.headline6,
                 textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              CountdownTimer(
+                endTime: state.nextGameTime?.millisecondsSinceEpoch ??
+                    DateRepository().tomorrow.millisecondsSinceEpoch,
+                widgetBuilder: (context, time) {
+                  if (time == null) {
+                    return const Text(
+                        'Silakan ulang dengan me-restart halaman web');
+                  }
+                  return Text(
+                      'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(2, '0')} : ${time.sec.toString().padLeft(2, '0')}');
+                },
               ),
               const SizedBox(height: 8),
               ElevatedButton.icon(

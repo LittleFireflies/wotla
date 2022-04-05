@@ -31,6 +31,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           attempts: records.histories.length,
           correctAnswer: records.correctAnswer,
           correct: records.correct,
+          nextGameTime: _dateRepository.tomorrow,
         ));
       }
     });
@@ -67,6 +68,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           history: history,
           attempts: attempts,
           correct: correct,
+          nextGameTime: _dateRepository.today.add(const Duration(days: 1)),
         ));
       }
     });

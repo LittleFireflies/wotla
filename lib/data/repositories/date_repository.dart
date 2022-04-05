@@ -4,4 +4,8 @@ class DateRepository {
 
     return DateTime(now.year, now.month, now.day);
   }
+
+  DateTime get tomorrow{
+    return today.add(const Duration(days: 1));
+  }
 }
