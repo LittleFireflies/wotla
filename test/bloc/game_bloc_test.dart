@@ -6,6 +6,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
@@ -15,6 +16,8 @@ class MockDataSource extends Mock implements DataSource {}
 class MockRepository extends Mock implements WotlaRepository {}
 
 class MockDateProvider extends Mock implements DateProvider {}
+
+class FakeUserDailyRecord extends Fake implements UserDailyRecord {}
 
 void main() {
   late DataSource dataSource;
@@ -39,6 +42,11 @@ void main() {
     when(() => dataSource.loadMemberList())
         .thenReturn(['GITA', 'MARSHA', 'CHRISTY', 'GABY']);
     when(() => dateProvider.today).thenReturn(DateTime(2022, 4, 4));
+    when(() => dateProvider.tomorrow).thenReturn(DateTime(2022, 4, 5));
+  });
+
+  setUpAll(() {
+    registerFallbackValue(FakeUserDailyRecord());
   });
 
   blocTest<GameBloc, GameState>(
@@ -59,6 +67,10 @@ void main() {
     'add answer history '
     'when InputSubmitted event is added '
     'and answer is correct',
+    setUp: () {
+      when(() => repository.saveTodayRecord(any()))
+          .thenAnswer((invocation) => Future.value());
+    },
     build: () => bloc,
     act: (bloc) => bloc
       ..add(const InputChanged('Gita'))
@@ -69,12 +81,15 @@ void main() {
         history: [],
         correctAnswer: correctAnswer,
       ),
-      const GameState(
+      GameState(
         answer: 'GITA',
-        history: [AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')],
+        history: const [
+          AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')
+        ],
         attempts: 1,
         correctAnswer: correctAnswer,
         correct: true,
+        nextGameTime: dateProvider.tomorrow,
       ),
     ],
     verify: (_) {
@@ -86,6 +101,10 @@ void main() {
     'add answer history '
     'when InputSubmitted event is added '
     'and answer is incorrect',
+    setUp: () {
+      when(() => repository.saveTodayRecord(any()))
+          .thenAnswer((invocation) => Future.value());
+    },
     build: () => bloc,
     act: (bloc) => bloc
       ..add(const InputChanged('Gaby'))
@@ -96,12 +115,15 @@ void main() {
         history: [],
         correctAnswer: correctAnswer,
       ),
-      const GameState(
+      GameState(
         answer: 'GABY',
-        history: [AnswerHistory(answer: 'GABY', answerIdentifier: 'G+XX')],
+        history: const [
+          AnswerHistory(answer: 'GABY', answerIdentifier: 'G+XX')
+        ],
         attempts: 1,
         correctAnswer: correctAnswer,
         correct: false,
+        nextGameTime: dateProvider.tomorrow,
       ),
     ],
     verify: (_) {
