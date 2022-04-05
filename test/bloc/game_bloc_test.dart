@@ -6,21 +6,26 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
 class MockDataSource extends Mock implements DataSource {}
 
+class MockRepository extends Mock implements WotlaRepository {}
+
 void main() {
   late DataSource dataSource;
+  late WotlaRepository repository;
   late GameBloc bloc;
 
   const correctAnswer = 'Gita';
 
   setUp(() {
     dataSource = MockDataSource();
+    repository = MockRepository();
     when(() => dataSource.getAnswer()).thenReturn('Gita');
 
-    bloc = GameBloc(dataSource);
+    bloc = GameBloc(dataSource, repository);
 
     when(() => dataSource.loadMemberList())
         .thenReturn(['GITA', 'MARSHA', 'CHRISTY', 'GABY']);
@@ -169,7 +174,7 @@ void main() {
     late GameBloc wotla;
 
     setUp(() {
-      wotla = GameBloc(dataSource);
+      wotla = GameBloc(dataSource, repository);
     });
 
     test('test answer with same length', () {

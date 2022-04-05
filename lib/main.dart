@@ -6,6 +6,7 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/repositories/wotla_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,7 +46,12 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GameBloc(DataSource()),
+      create: (context) => GameBloc(
+        DataSource(),
+        WotlaRepository(
+          WotlaSharedPreferences(),
+        ),
+      )..add(const LoadRecord()),
       child: const MainView(),
     );
   }

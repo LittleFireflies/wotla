@@ -3,14 +3,30 @@ import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
+import 'package:wotla/data/models/user_record.dart';
+import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
+  final WotlaRepository _repository;
 
-  GameBloc(DataSource dataSource)
+  GameBloc(DataSource dataSource, WotlaRepository repository)
       : _dataSource = dataSource,
+        _repository = repository,
         super(GameState(history: [], correctAnswer: dataSource.getAnswer())) {
+    on<LoadRecord>((event, emit) async {
+      final records = await _repository.readUserRecord();
+
+      if (records != null) {
+        emit(state.copyWith(
+          history: records.histories,
+          attempts: records.histories.length,
+          correctAnswer: records.correctAnswer,
+          correct: records.correct,
+        ));
+      }
+    });
     on<InputChanged>((event, emit) {
       emit(state.copyWith(answer: event.answer.toUpperCase()));
     });
@@ -32,6 +48,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         final attempts = state.attempts + 1;
 
         final correct = result == state.answer;
+
+        _repository.saveTodayRecord(UserRecord(
+          histories: history,
+          date: DateTime.now(),
+          correct: correct,
+          correctAnswer: state.correctAnswer,
+        ));
 
         emit(state.copyWith(
           history: history,

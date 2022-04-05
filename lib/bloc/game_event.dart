@@ -4,6 +4,13 @@ abstract class GameEvent extends Equatable {
   const GameEvent();
 }
 
+class LoadRecord extends GameEvent {
+  const LoadRecord();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class InputChanged extends GameEvent {
   final String answer;
 

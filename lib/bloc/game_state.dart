@@ -24,10 +24,11 @@ class GameState extends Equatable {
     int? attempts,
     bool? correct,
     String? error,
+    String? correctAnswer,
   }) {
     return GameState(
       answer: answer ?? this.answer,
-      correctAnswer: correctAnswer,
+      correctAnswer: correctAnswer ?? this.correctAnswer,
       history: history ?? this.history,
       attempts: attempts ?? this.attempts,
       correct: correct ?? this.correct,
