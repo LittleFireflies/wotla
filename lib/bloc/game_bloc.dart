@@ -20,7 +20,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   })  : _dataSource = dataSource,
         _repository = repository,
         _dateRepository = dateRepository,
-        super(GameState(history: [], correctAnswer: dataSource.getAnswer())) {
+        super(GameState(
+            history: const [], correctAnswer: dataSource.getAnswer())) {
     on<LoadRecord>((event, emit) async {
       final records = await _repository.readTodayRecord();
 

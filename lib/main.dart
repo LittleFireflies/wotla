@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: MainPage(),
+      home: const MainPage(),
     );
   }
 }
@@ -84,11 +84,11 @@ class MainView extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text('Cara Bermain'),
+                    title: const Text('Cara Bermain'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: const [
                         Text('Tebak WOTLA dalam 5 kesempatan.'),
                         SizedBox(height: 8),
                         Text(
