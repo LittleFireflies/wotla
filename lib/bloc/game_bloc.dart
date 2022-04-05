@@ -68,7 +68,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           history: history,
           attempts: attempts,
           correct: correct,
-          nextGameTime: _dateProvider.today.add(const Duration(days: 1)),
+          nextGameTime: _dateProvider.tomorrow,
         ));
       }
     });
