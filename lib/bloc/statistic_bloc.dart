@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wotla/bloc/statistic_event.dart';
 import 'package:wotla/bloc/statistic_state.dart';
+import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_statistic.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 
@@ -19,15 +20,19 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
         final userRecords = await _repository.readUserRecords();
 
         if (userRecords != null) {
-          final gamesPlayed = userRecords.records.length;
-          final winGamesRecord = userRecords.records
+          final completedGames = Map<String, UserDailyRecord>.from(
+              userRecords.records)
+            ..removeWhere(
+                (key, value) => !value.correct && value.histories.length < 5);
+          final gamesPlayed = completedGames.length;
+          final winGamesRecord = Map.from(completedGames)
             ..removeWhere((key, value) => !value.correct);
           final winPercentage =
               (winGamesRecord.length / gamesPlayed * 100).toInt();
           final latestWinStreak = getWinStreakCount(
-              userRecords.records.entries.map((e) => e.value.correct).toList());
+              completedGames.entries.map((e) => e.value.correct).toList());
           final maxWinStreak = getMaxWinStreakCount(
-              userRecords.records.entries.map((e) => e.value.correct).toList());
+              completedGames.entries.map((e) => e.value.correct).toList());
 
           emit(
             StatisticLoadedState(
@@ -48,7 +53,7 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
           )));
         }
       } catch (e) {
-        emit(StatisticLoadErrorState(errorMessage));
+        emit(const StatisticLoadErrorState(errorMessage));
       }
     });
   }
