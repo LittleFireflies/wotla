@@ -6,6 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wotla/bloc/game_bloc.dart';
 import 'package:wotla/bloc/game_event.dart';
 import 'package:wotla/bloc/game_state.dart';
+import 'package:wotla/bloc/statistic_bloc.dart';
+import 'package:wotla/bloc/statistic_event.dart';
+import 'package:wotla/bloc/statistic_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/providers/date_provider.dart';
@@ -27,7 +30,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primary: Colors.red,
           onPrimary: Colors.white,
-          secondary: Colors.blue,
+          secondary: Colors.red,
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
@@ -38,7 +41,15 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const MainPage(),
+      home: RepositoryProvider(
+        create: (context) => WotlaRepository(
+          WotlaSharedPreferences(
+            SharedPreferences.getInstance(),
+          ),
+          DateProvider(),
+        ),
+        child: const MainPage(),
+      ),
     );
   }
 }
@@ -53,12 +64,7 @@ class MainPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => GameBloc(
           dataSource: DataSource(),
-          repository: WotlaRepository(
-            WotlaSharedPreferences(
-              SharedPreferences.getInstance(),
-            ),
-            context.read<DateProvider>(),
-          ),
+          repository: context.read<WotlaRepository>(),
           dateProvider: context.read<DateProvider>(),
         )..add(const LoadRecord()),
         child: const MainView(),
@@ -109,6 +115,19 @@ class MainView extends StatelessWidget {
           },
           icon: const Icon(Icons.help_outline),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const StatisticDialog();
+                },
+              );
+            },
+            icon: const Icon(Icons.bar_chart),
+          ),
+        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -189,6 +208,121 @@ class MainView extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StatisticDialog extends StatelessWidget {
+  const StatisticDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RepositoryProvider(
+      create: (context) => WotlaRepository(
+        WotlaSharedPreferences(SharedPreferences.getInstance()),
+        DateProvider(),
+      ),
+      child: BlocProvider(
+        create: (context) => StatisticBloc(
+          context.read<WotlaRepository>(),
+        )..add(const LoadUserStatistic()),
+        child: const StatisticDialogView(),
+      ),
+    );
+  }
+}
+
+class StatisticDialogView extends StatelessWidget {
+  const StatisticDialogView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Statistik'),
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.close),
+          ),
+        ],
+      ),
+      content: BlocBuilder<StatisticBloc, StatisticState>(
+        builder: (context, state) {
+          if (state is StatisticLoadedState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(state.statistic.gamesPlayed.toString()),
+                          Text(
+                            'Main',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(state.statistic.winPercentage.toString()),
+                          Text(
+                            '% Menang',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(state.statistic.winStreak.toString()),
+                          Text(
+                            'Win Streak',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(state.statistic.maxWinStreak.toString()),
+                          Text(
+                            'Max Win Streak',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          } else if (state is StatisticLoadErrorState) {
+            return Text(state.message);
+          } else {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                CircularProgressIndicator(),
+              ],
+            );
+          }
+        },
       ),
     );
   }
