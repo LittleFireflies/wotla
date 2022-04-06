@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primary: Colors.red,
           onPrimary: Colors.white,
-          secondary: Colors.blue,
+          secondary: Colors.red,
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
@@ -109,6 +109,19 @@ class MainView extends StatelessWidget {
           },
           icon: const Icon(Icons.help_outline),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const StatisticDialog();
+                },
+              );
+            },
+            icon: const Icon(Icons.bar_chart),
+          ),
+        ],
       ),
       body: GestureDetector(
         onTap: () {
@@ -189,6 +202,76 @@ class MainView extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StatisticDialog extends StatelessWidget {
+  const StatisticDialog({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Statistik'),
+      content: BlocBuilder<GameBloc, GameState>(
+        builder: (context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text('1'),
+                        Text(
+                          'Main',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text('100'),
+                        Text(
+                          '% Menang',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text('1'),
+                        Text(
+                          'Win Streak',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text('1'),
+                        Text(
+                          'Max Win Streak',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
