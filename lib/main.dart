@@ -243,7 +243,18 @@ class StatisticDialogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Statistik'),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Statistik'),
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.close),
+          ),
+        ],
+      ),
       content: BlocBuilder<StatisticBloc, StatisticState>(
         builder: (context, state) {
           if (state is StatisticLoadedState) {
