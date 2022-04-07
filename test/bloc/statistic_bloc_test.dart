@@ -157,7 +157,7 @@ void main() {
     expect(bloc.getMaxWinStreakCount([true, false, false]), 1);
     expect(bloc.getMaxWinStreakCount([true, false, true]), 1);
     expect(bloc.getMaxWinStreakCount([true, true, false]), 2);
-    expect(bloc.getMaxWinStreakCount([true, true, true]), 3);
+    expect(bloc.getMaxWinStreakCount([true, true, true]), 0);
     expect(
       bloc.getMaxWinStreakCount([
         true,
