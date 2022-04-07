@@ -1,9 +1,36 @@
 name: WOTLA CI
 on: pull_request
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v2
       - run: flutter test
+
+  build_and_preview:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOTLA_6CCDA }}'
+          projectId: wotla-6ccda
+      - run: flutter build web
+
+        #        jobs:
+#          build_and_preview:
+#            if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+#            needs: test
+#            runs-on: ubuntu-latest
+#            steps:
+#              - uses: actions/checkout@v2
+#              - uses: FirebaseExtended/action-hosting-deploy@v0
+#                with:
+#                  repoToken: '${{ secrets.GITHUB_TOKEN }}'
+#                  firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOTLA_6CCDA }}'
+#                  projectId: wotla-6ccda
