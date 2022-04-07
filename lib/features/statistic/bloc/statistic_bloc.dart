@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wotla/bloc/statistic_event.dart';
-import 'package:wotla/bloc/statistic_state.dart';
+import 'package:wotla/features/statistic/bloc/statistic_event.dart';
+import 'package:wotla/features/statistic/bloc/statistic_state.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_statistic.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
