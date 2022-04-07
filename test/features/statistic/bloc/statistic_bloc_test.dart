@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wotla/bloc/statistic_bloc.dart';
-import 'package:wotla/bloc/statistic_event.dart';
-import 'package:wotla/bloc/statistic_state.dart';
+import 'package:wotla/features/statistic/bloc/statistic_bloc.dart';
+import 'package:wotla/features/statistic/bloc/statistic_event.dart';
+import 'package:wotla/features/statistic/bloc/statistic_state.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_records.dart';
