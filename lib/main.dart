@@ -249,9 +249,9 @@ class StatisticDialogView extends StatelessWidget {
           const Text('Statistik'),
           IconButton(
             padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
+            constraints: const BoxConstraints(),
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
           ),
         ],
       ),
@@ -268,7 +268,7 @@ class StatisticDialogView extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(state.statistic.gamesPlayed.toString()),
-                          Text(
+                          const Text(
                             'Main',
                             textAlign: TextAlign.center,
                           ),
@@ -279,7 +279,7 @@ class StatisticDialogView extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(state.statistic.winPercentage.toString()),
-                          Text(
+                          const Text(
                             '% Menang',
                             textAlign: TextAlign.center,
                           ),
@@ -290,7 +290,7 @@ class StatisticDialogView extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(state.statistic.winStreak.toString()),
-                          Text(
+                          const Text(
                             'Win Streak',
                             textAlign: TextAlign.center,
                           ),
@@ -301,7 +301,7 @@ class StatisticDialogView extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(state.statistic.maxWinStreak.toString()),
-                          Text(
+                          const Text(
                             'Max Win Streak',
                             textAlign: TextAlign.center,
                           ),

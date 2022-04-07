@@ -96,7 +96,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       }
     }
 
-    print(userAnswer);
     return checkAnswer.join();
   }
 }
