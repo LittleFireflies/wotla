@@ -5,6 +5,7 @@ import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_records.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
+import 'package:wotla/data/storage/wotla_shared_preferences.dart';
 
 class MockSharedPrefs extends Mock implements WotlaSharedPreferences {}
 
