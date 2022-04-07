@@ -15,12 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v2
+      - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOTLA_6CCDA }}'
+          expires: 3d
           projectId: wotla-6ccda
-      - run: flutter build web
 
         #        jobs:
 #          build_and_preview:
