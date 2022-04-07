@@ -51,7 +51,8 @@ class _WotlaInputState extends State<WotlaInput> {
                 },
                 child: const Text('Tebak'),
                 style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(36)),
+                  minimumSize: const Size.fromHeight(36),
+                ),
               ),
             ],
           );
@@ -70,10 +71,12 @@ class _WotlaInputState extends State<WotlaInput> {
                 widgetBuilder: (context, time) {
                   if (time == null) {
                     return const Text(
-                        'Silakan ulang dengan me-restart halaman web');
+                      'Silakan ulang dengan me-restart halaman web',
+                    );
                   }
                   return Text(
-                      'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(2, '0')} : ${time.sec.toString().padLeft(2, '0')}');
+                    'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(2, '0')} : ${time.sec.toString().padLeft(2, '0')}',
+                  );
                 },
               ),
               const SizedBox(height: 8),

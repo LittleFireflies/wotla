@@ -129,10 +129,11 @@ void main() {
       'and returns data without today record',
       () async {
         // arrange
-        when(() => sharedPreferences.readUserRecords()).thenAnswer((_) async =>
-            UserRecords({
-              yesterdayDailyRecord.date.toIso8601String(): yesterdayDailyRecord
-            }));
+        when(() => sharedPreferences.readUserRecords()).thenAnswer(
+          (_) async => UserRecords({
+            yesterdayDailyRecord.date.toIso8601String(): yesterdayDailyRecord
+          }),
+        );
         // act
         final result = await repository.readTodayRecord();
         // assert
@@ -149,16 +150,20 @@ void main() {
         // arrange
         when(() => sharedPreferences.readUserRecords())
             .thenAnswer((_) async => null);
-        when(() => sharedPreferences.saveTodayRecord(
-                UserRecords({dailyRecord.date.toIso8601String(): dailyRecord})))
-            .thenAnswer((invocation) => Future.value());
+        when(
+          () => sharedPreferences.saveTodayRecord(
+            UserRecords({dailyRecord.date.toIso8601String(): dailyRecord}),
+          ),
+        ).thenAnswer((invocation) => Future.value());
         // act
         await repository.saveTodayRecord(dailyRecord);
         // assert
         verify(() => sharedPreferences.readUserRecords()).called(1);
-        verify(() => sharedPreferences.saveTodayRecord(
-                UserRecords({dailyRecord.date.toIso8601String(): dailyRecord})))
-            .called(1);
+        verify(
+          () => sharedPreferences.saveTodayRecord(
+            UserRecords({dailyRecord.date.toIso8601String(): dailyRecord}),
+          ),
+        ).called(1);
       },
     );
 

@@ -14,50 +14,60 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
   StatisticBloc(WotlaRepository repository)
       : _repository = repository,
         super(const StatisticLoadingState()) {
-    on<LoadUserStatistic>((event, emit) async {
-      emit(const StatisticLoadingState());
+    on<LoadUserStatistic>((event, emit) => _onLoadUserStatistic(emit));
+  }
 
-      try {
-        final userRecords = await _repository.readUserRecords();
+  Future<void> _onLoadUserStatistic(Emitter<StatisticState> emit) async {
+    emit(const StatisticLoadingState());
 
-        if (userRecords != null) {
-          final completedGames =
-              Map<String, UserDailyRecord>.from(userRecords.records)
-                ..removeWhere((key, value) =>
+    try {
+      final userRecords = await _repository.readUserRecords();
+
+      if (userRecords != null) {
+        final completedGames =
+            Map<String, UserDailyRecord>.from(userRecords.records)
+              ..removeWhere(
+                (key, value) =>
                     !value.correct &&
-                    value.histories.length < WotlaConst.maxAttempt);
-          final gamesPlayed = completedGames.length;
-          final winGamesRecord = Map.from(completedGames)
-            ..removeWhere((key, value) => !value.correct);
-          final winPercentage =
-              (winGamesRecord.length / gamesPlayed * 100).toInt();
-          final latestWinStreak = getWinStreakCount(
-              completedGames.entries.map((e) => e.value.correct).toList());
-          final maxWinStreak = getMaxWinStreakCount(
-              completedGames.entries.map((e) => e.value.correct).toList());
+                    value.histories.length < WotlaConst.maxAttempt,
+              );
+        final gamesPlayed = completedGames.length;
+        final winGamesRecord = Map.from(completedGames)
+          ..removeWhere((key, value) => !value.correct);
+        final winPercentage =
+            (winGamesRecord.length / gamesPlayed * 100).toInt();
+        final latestWinStreak = getWinStreakCount(
+          completedGames.entries.map((e) => e.value.correct).toList(),
+        );
+        final maxWinStreak = getMaxWinStreakCount(
+          completedGames.entries.map((e) => e.value.correct).toList(),
+        );
 
-          emit(
-            StatisticLoadedState(
-              UserStatistic(
-                gamesPlayed: gamesPlayed,
-                winPercentage: winPercentage,
-                winStreak: latestWinStreak,
-                maxWinStreak: maxWinStreak,
-              ),
+        emit(
+          StatisticLoadedState(
+            UserStatistic(
+              gamesPlayed: gamesPlayed,
+              winPercentage: winPercentage,
+              winStreak: latestWinStreak,
+              maxWinStreak: maxWinStreak,
             ),
-          );
-        } else {
-          emit(const StatisticLoadedState(UserStatistic(
-            gamesPlayed: 0,
-            winPercentage: 0,
-            winStreak: 0,
-            maxWinStreak: 0,
-          )));
-        }
-      } catch (e) {
-        emit(const StatisticLoadErrorState(errorMessage));
+          ),
+        );
+      } else {
+        emit(
+          const StatisticLoadedState(
+            UserStatistic(
+              gamesPlayed: 0,
+              winPercentage: 0,
+              winStreak: 0,
+              maxWinStreak: 0,
+            ),
+          ),
+        );
       }
-    });
+    } catch (e) {
+      emit(const StatisticLoadErrorState(errorMessage));
+    }
   }
 
   int getWinStreakCount(List<bool> recordsResult) {

@@ -44,31 +44,37 @@ class GameView extends StatelessWidget {
         leading: IconButton(
           onPressed: () {
             showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Cara Bermain'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                            'Tebak WOTLA dalam ${WotlaConst.maxAttempt} kesempatan.'),
-                        SizedBox(height: 8),
-                        Text(
-                            'Jawaban merupakan nama panggilan member JKT48 yang terdaftar pada web jkt48.com.'),
-                        SizedBox(height: 8),
-                        Text(
-                            'Setelah jawaban dikirimkan, warna huruf akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan jawabannya.'),
-                        SizedBox(height: 8),
-                        Text(
-                            'Jika huruf berwarna hijau, maka huruf tersebut telah berada pada posisi yang tepat.'),
-                        Text(
-                            'Jika huruf berwarna kuning, maka huruf tersebut terdapat pada jawaban, namun posisinya belum tepat.'),
-                      ],
-                    ),
-                  );
-                });
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Cara Bermain'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Tebak WOTLA dalam ${WotlaConst.maxAttempt} kesempatan.',
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Jawaban merupakan nama panggilan member JKT48 yang terdaftar pada web jkt48.com.',
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Setelah jawaban dikirimkan, warna huruf akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan jawabannya.',
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Jika huruf berwarna hijau, maka huruf tersebut telah berada pada posisi yang tepat.',
+                      ),
+                      Text(
+                        'Jika huruf berwarna kuning, maka huruf tersebut terdapat pada jawaban, namun posisinya belum tepat.',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
           },
           icon: const Icon(Icons.help_outline),
         ),
@@ -101,10 +107,12 @@ class GameView extends StatelessWidget {
                   if (error != null) {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
-                      ..showSnackBar(SnackBar(
-                        content: Text(error),
-                        dismissDirection: DismissDirection.horizontal,
-                      ));
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(error),
+                          dismissDirection: DismissDirection.horizontal,
+                        ),
+                      );
                   }
                 },
                 builder: (context, state) {
@@ -120,39 +128,41 @@ class GameView extends StatelessWidget {
                               ),
                             ),
                             SliverList(
-                              delegate:
-                                  SliverChildBuilderDelegate((context, index) {
-                                final history = state.history[index];
-                                var charIndex = 0;
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final history = state.history[index];
+                                  var charIndex = 0;
 
-                                return Card(
-                                  color: const Color(0xFFFF99BB),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: history.answerIdentifier
-                                          .toChars()
-                                          .map((char) {
-                                        final widget = Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            history.answer[charIndex],
-                                            style: TextStyle(
-                                              color: char == 'X'
-                                                  ? Colors.black
-                                                  : char == '+'
-                                                      ? Colors.yellowAccent
-                                                      : Colors.green,
+                                  return Card(
+                                    color: const Color(0xFFFF99BB),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: history.answerIdentifier
+                                            .toChars()
+                                            .map((char) {
+                                          final widget = Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              history.answer[charIndex],
+                                              style: TextStyle(
+                                                color: char == 'X'
+                                                    ? Colors.black
+                                                    : char == '+'
+                                                        ? Colors.yellowAccent
+                                                        : Colors.green,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                        charIndex++;
-                                        return widget;
-                                      }).toList(),
+                                          );
+                                          charIndex++;
+                                          return widget;
+                                        }).toList(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }, childCount: state.history.length),
+                                  );
+                                },
+                                childCount: state.history.length,
+                              ),
                             ),
                           ],
                         ),

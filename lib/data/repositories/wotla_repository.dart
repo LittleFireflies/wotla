@@ -14,10 +14,12 @@ class WotlaRepository {
 
     records?.records[record.date.toIso8601String()] = record;
 
-    await sharedPreferences.saveTodayRecord(records ??
-        UserRecords({
-          record.date.toIso8601String(): record,
-        }));
+    await sharedPreferences.saveTodayRecord(
+      records ??
+          UserRecords({
+            record.date.toIso8601String(): record,
+          }),
+    );
   }
 
   Future<UserRecords?> readUserRecords() async {

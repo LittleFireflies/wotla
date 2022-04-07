@@ -214,23 +214,37 @@ void main() {
     });
 
     test('test answer with same length', () {
-      expect('GXX+',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Gebi'.toUpperCase()));
-      expect('GITA',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Gita'.toUpperCase()));
-      expect('AZIZI',
-          wotla.checkAnswer('Azizi'.toUpperCase(), 'Azizi'.toUpperCase()));
-      expect('ONIEL',
-          wotla.checkAnswer('Oniel'.toUpperCase(), 'Oniel'.toUpperCase()));
+      expect(
+        'GXX+',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Gebi'.toUpperCase()),
+      );
+      expect(
+        'GITA',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Gita'.toUpperCase()),
+      );
+      expect(
+        'AZIZI',
+        wotla.checkAnswer('Azizi'.toUpperCase(), 'Azizi'.toUpperCase()),
+      );
+      expect(
+        'ONIEL',
+        wotla.checkAnswer('Oniel'.toUpperCase(), 'Oniel'.toUpperCase()),
+      );
     });
 
     test('test answer with different length length', () {
-      expect('XEXXX+',
-          wotla.checkAnswer('Beby'.toUpperCase(), 'Celine'.toUpperCase()));
-      expect('X++XX+',
-          wotla.checkAnswer('Lia'.toUpperCase(), 'Raisha'.toUpperCase()));
-      expect('+X+++',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Angga'.toUpperCase()));
+      expect(
+        'XEXXX+',
+        wotla.checkAnswer('Beby'.toUpperCase(), 'Celine'.toUpperCase()),
+      );
+      expect(
+        'X++XX+',
+        wotla.checkAnswer('Lia'.toUpperCase(), 'Raisha'.toUpperCase()),
+      );
+      expect(
+        '+X+++',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Angga'.toUpperCase()),
+      );
     });
   });
 }

@@ -20,19 +20,25 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   })  : _dataSource = dataSource,
         _repository = repository,
         _dateProvider = dateProvider,
-        super(GameState(
-            history: const [], correctAnswer: dataSource.getAnswer())) {
+        super(
+          GameState(
+            history: const [],
+            correctAnswer: dataSource.getAnswer(),
+          ),
+        ) {
     on<LoadRecord>((event, emit) async {
       final records = await _repository.readTodayRecord();
 
       if (records != null) {
-        emit(state.copyWith(
-          history: records.histories,
-          attempts: records.histories.length,
-          correctAnswer: records.correctAnswer,
-          correct: records.correct,
-          nextGameTime: _dateProvider.tomorrow,
-        ));
+        emit(
+          state.copyWith(
+            history: records.histories,
+            attempts: records.histories.length,
+            correctAnswer: records.correctAnswer,
+            correct: records.correct,
+            nextGameTime: _dateProvider.tomorrow,
+          ),
+        );
       }
     });
     on<InputChanged>((event, emit) {
@@ -57,19 +63,23 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         final correct = result == state.answer;
 
-        _repository.saveTodayRecord(UserDailyRecord(
-          histories: history,
-          date: _dateProvider.today,
-          correct: correct,
-          correctAnswer: state.correctAnswer,
-        ));
+        _repository.saveTodayRecord(
+          UserDailyRecord(
+            histories: history,
+            date: _dateProvider.today,
+            correct: correct,
+            correctAnswer: state.correctAnswer,
+          ),
+        );
 
-        emit(state.copyWith(
-          history: history,
-          attempts: attempts,
-          correct: correct,
-          nextGameTime: _dateProvider.tomorrow,
-        ));
+        emit(
+          state.copyWith(
+            history: history,
+            attempts: attempts,
+            correct: correct,
+            nextGameTime: _dateProvider.tomorrow,
+          ),
+        );
       }
     });
   }
