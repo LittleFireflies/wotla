@@ -4,6 +4,7 @@ import 'package:wotla/bloc/statistic_state.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_statistic.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
+import 'package:wotla/utils/const.dart';
 
 class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
   final WotlaRepository _repository;
@@ -20,10 +21,11 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
         final userRecords = await _repository.readUserRecords();
 
         if (userRecords != null) {
-          final completedGames = Map<String, UserDailyRecord>.from(
-              userRecords.records)
-            ..removeWhere(
-                (key, value) => !value.correct && value.histories.length < 5);
+          final completedGames =
+              Map<String, UserDailyRecord>.from(userRecords.records)
+                ..removeWhere((key, value) =>
+                    !value.correct &&
+                    value.histories.length < WotlaConst.maxAttempt);
           final gamesPlayed = completedGames.length;
           final winGamesRecord = Map.from(completedGames)
             ..removeWhere((key, value) => !value.correct);

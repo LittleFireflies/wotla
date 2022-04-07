@@ -13,6 +13,7 @@ import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
+import 'package:wotla/utils/const.dart';
 
 void main() {
   runApp(const MyApp());
@@ -96,7 +97,8 @@ class MainView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
-                        Text('Tebak WOTLA dalam 5 kesempatan.'),
+                        Text(
+                            'Tebak WOTLA dalam ${WotlaConst.maxAttempt} kesempatan.'),
                         SizedBox(height: 8),
                         Text(
                             'Jawaban merupakan nama panggilan member JKT48 yang terdaftar pada web jkt48.com.'),
@@ -344,7 +346,7 @@ class _WotlaInputState extends State<_WotlaInput> {
   Widget build(BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
       builder: (context, state) {
-        if (state.attempts < 5 && !state.correct) {
+        if (state.attempts < WotlaConst.maxAttempt && !state.correct) {
           return Column(
             children: [
               TextField(
@@ -411,7 +413,8 @@ class _WotlaInputState extends State<_WotlaInput> {
   }
 
   String _getShareText(List<AnswerHistory> history, bool correct) {
-    var text = 'WOTLA ${!correct ? 'X' : history.length}/5\n';
+    var text =
+        'WOTLA ${!correct ? 'X' : history.length}/${WotlaConst.maxAttempt}\n';
     text += '\n';
 
     for (int i = 0; i < history.length; i++) {
