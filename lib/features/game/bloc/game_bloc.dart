@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wotla/bloc/game_event.dart';
-import 'package:wotla/bloc/game_state.dart';
+import 'package:wotla/features/game/bloc/game_event.dart';
+import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
