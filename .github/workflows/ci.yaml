@@ -26,6 +26,8 @@ jobs:
       - uses: subosito/flutter-action@v2
       - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        # don't deploy to preview channel when PR to main
+        if: github.event.pull_request.base.ref != 'main'
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOTLA_6CCDA }}'
