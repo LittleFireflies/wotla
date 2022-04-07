@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wotla/bloc/game_bloc.dart';
-import 'package:wotla/bloc/game_event.dart';
-import 'package:wotla/bloc/game_state.dart';
+import 'package:wotla/features/game/bloc/game_bloc.dart';
+import 'package:wotla/features/game/bloc/game_event.dart';
+import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
@@ -214,23 +214,37 @@ void main() {
     });
 
     test('test answer with same length', () {
-      expect('GXX+',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Gebi'.toUpperCase()));
-      expect('GITA',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Gita'.toUpperCase()));
-      expect('AZIZI',
-          wotla.checkAnswer('Azizi'.toUpperCase(), 'Azizi'.toUpperCase()));
-      expect('ONIEL',
-          wotla.checkAnswer('Oniel'.toUpperCase(), 'Oniel'.toUpperCase()));
+      expect(
+        'GXX+',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Gebi'.toUpperCase()),
+      );
+      expect(
+        'GITA',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Gita'.toUpperCase()),
+      );
+      expect(
+        'AZIZI',
+        wotla.checkAnswer('Azizi'.toUpperCase(), 'Azizi'.toUpperCase()),
+      );
+      expect(
+        'ONIEL',
+        wotla.checkAnswer('Oniel'.toUpperCase(), 'Oniel'.toUpperCase()),
+      );
     });
 
     test('test answer with different length length', () {
-      expect('XEXXX+',
-          wotla.checkAnswer('Beby'.toUpperCase(), 'Celine'.toUpperCase()));
-      expect('X++XX+',
-          wotla.checkAnswer('Lia'.toUpperCase(), 'Raisha'.toUpperCase()));
-      expect('+X+++',
-          wotla.checkAnswer('Gita'.toUpperCase(), 'Angga'.toUpperCase()));
+      expect(
+        'XEXXX+',
+        wotla.checkAnswer('Beby'.toUpperCase(), 'Celine'.toUpperCase()),
+      );
+      expect(
+        'X++XX+',
+        wotla.checkAnswer('Lia'.toUpperCase(), 'Raisha'.toUpperCase()),
+      );
+      expect(
+        '+X+++',
+        wotla.checkAnswer('Gita'.toUpperCase(), 'Angga'.toUpperCase()),
+      );
     });
   });
 }
