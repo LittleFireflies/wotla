@@ -6,6 +6,7 @@ import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/features/game/bloc/game_bloc.dart';
 import 'package:wotla/features/game/bloc/game_event.dart';
 import 'package:wotla/features/game/bloc/game_state.dart';
+import 'package:wotla/features/game/widgets/answer_card.dart';
 import 'package:wotla/features/game/widgets/wotla_input.dart';
 import 'package:wotla/features/how_to/view/how_to_dialog.dart';
 import 'package:wotla/features/statistic/view/statistic_dialog.dart';
@@ -105,34 +106,10 @@ class GameView extends StatelessWidget {
                               delegate: SliverChildBuilderDelegate(
                                 (context, index) {
                                   final history = state.history[index];
-                                  var charIndex = 0;
 
-                                  return Card(
-                                    color: const Color(0xFFFF99BB),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: history.answerIdentifier
-                                            .toChars()
-                                            .map((char) {
-                                          final widget = Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              history.answer[charIndex],
-                                              style: TextStyle(
-                                                color: char == 'X'
-                                                    ? Colors.black
-                                                    : char == '+'
-                                                        ? Colors.yellowAccent
-                                                        : Colors.green,
-                                              ),
-                                            ),
-                                          );
-                                          charIndex++;
-                                          return widget;
-                                        }).toList(),
-                                      ),
-                                    ),
+                                  return AnswerCard(
+                                    answer: history.answer,
+                                    answerIdentifier: history.answerIdentifier,
                                   );
                                 },
                                 childCount: state.history.length,

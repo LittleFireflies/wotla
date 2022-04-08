@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wotla/features/game/widgets/answer_card.dart';
 import 'package:wotla/utils/const.dart';
 
 class HowToDialog extends StatelessWidget {
@@ -23,13 +24,24 @@ class HowToDialog extends StatelessWidget {
           Text(
             'Setelah jawaban dikirimkan, warna huruf akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan jawabannya.',
           ),
+          Divider(),
+          Text(
+            'Contoh',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: 8),
+          AnswerCard(answer: 'GABY', answerIdentifier: 'G+XX'),
           Text(
-            'Jika huruf berwarna hijau, maka huruf tersebut telah berada pada posisi yang tepat.',
+            'Huruf G berwarna hijau, artinya huruf tersebut telah berada pada posisi yang tepat.',
           ),
+          SizedBox(height: 4),
           Text(
-            'Jika huruf berwarna kuning, maka huruf tersebut terdapat pada jawaban, namun posisinya belum tepat.',
+            'Huruf A berwarna kuning, maka huruf tersebut terdapat pada jawaban, namun posisinya belum tepat.',
           ),
+          SizedBox(height: 8),
+          AnswerCard(answer: 'GITA', answerIdentifier: 'GITA'),
+          SizedBox(height: 4),
+          Text('Jawabannya adalah GITA!'),
         ],
       ),
     );

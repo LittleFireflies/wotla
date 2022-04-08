@@ -7,6 +7,7 @@ import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 import 'package:wotla/utils/const.dart';
+import 'package:wotla/utils/string_extension.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   final DataSource _dataSource;
@@ -107,17 +108,5 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
 
     return checkAnswer.join();
-  }
-}
-
-extension StringExtension on String {
-  List<String> toChars() {
-    final chars = <String>[];
-
-    for (int i = 0; i < length; i++) {
-      chars.add(this[i]);
-    }
-
-    return chars;
   }
 }
