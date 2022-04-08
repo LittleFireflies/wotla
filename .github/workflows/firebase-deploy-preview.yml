@@ -3,7 +3,9 @@
 
 name: Deploy to Preview Channel
 'on':
-  pull_request
+  pull_request:
+    branches-ignore:
+      - main
 
 jobs:
   test_and_analyze:
