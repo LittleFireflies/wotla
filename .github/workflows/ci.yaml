@@ -31,5 +31,5 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WOTLA_6CCDA }}'
-          expires: 3d
+          expires: 1d
           projectId: wotla-6ccda
