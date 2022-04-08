@@ -2,8 +2,8 @@
 
 WOTLA - Tebak Member JKT48
 
-<a href="https://github.com/LittleFireflies/wotla/actions"><img src="https://github.com/LittleFireflies/wotla/workflows/wotla CI/badge.svg" alt="Build Status"></a>
-<a href="https://github.com/LittleFireflies/wotla/actions"><img src="https://github.com/LittleFireflies/wotla/workflows/Deploy to Dev Hosting/badge.svg" alt="Build Status"></a>
+[![Deploy to Production Firebase Hosting](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-prod.yml/badge.svg)](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-prod.yml)
+[![Deploy to Dev Hosting](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-dev.yml/badge.svg?branch=dev)](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-dev.yml)
 
 ## Getting Started
 
