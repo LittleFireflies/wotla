@@ -5,9 +5,9 @@ name: Deploy to Preview Channel
 'on':
   workflow_run:
     workflows:
-      - 'wotla CI'
-    branches:
-      - '!main'
+      - wotla CI
+    branches-ignore:
+      - main
     types:
       - completed
 jobs:
