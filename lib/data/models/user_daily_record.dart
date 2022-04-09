@@ -23,15 +23,6 @@ class UserDailyRecord extends Equatable {
 
   Map<String, dynamic> toJson() => _$UserDailyRecordToJson(this);
 
-  UserDailyRecord copyWith({DateTime? date}) {
-    return UserDailyRecord(
-      date: date ?? this.date,
-      histories: histories,
-      correct: correct,
-      correctAnswer: correctAnswer,
-    );
-  }
-
   @override
   List<Object?> get props => [
         date,
