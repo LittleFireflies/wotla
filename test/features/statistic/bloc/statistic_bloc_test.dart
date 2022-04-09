@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/features/statistic/bloc/statistic_bloc.dart';
 import 'package:wotla/features/statistic/bloc/statistic_event.dart';
 import 'package:wotla/features/statistic/bloc/statistic_state.dart';
@@ -10,10 +11,15 @@ import 'package:wotla/data/models/user_records.dart';
 import 'package:wotla/data/models/user_statistic.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
 
+import '../../../helper/models.dart';
+
 class MockRepository extends Mock implements WotlaRepository {}
+
+class MockDateProvider extends Mock implements DateProvider {}
 
 void main() {
   late WotlaRepository repository;
+  late DateProvider dateProvider;
   late StatisticBloc bloc;
 
   final today = DateTime(2022, 4, 4);
@@ -74,7 +80,10 @@ void main() {
 
   setUp(() {
     repository = MockRepository();
-    bloc = StatisticBloc(repository);
+    dateProvider = MockDateProvider();
+    bloc = StatisticBloc(repository, dateProvider);
+
+    when(() => dateProvider.today).thenReturn(today);
   });
 
   blocTest<StatisticBloc, StatisticState>(
@@ -135,6 +144,53 @@ void main() {
     expect: () => [
       const StatisticLoadingState(),
       const StatisticLoadErrorState(StatisticBloc.errorMessage),
+    ],
+  );
+
+  blocTest<StatisticBloc, StatisticState>(
+    'emit user statistic '
+    'when LoadUserStatistic event is added '
+    'and returns successfully '
+    'and user skips some days',
+    setUp: () {
+      final dayMinus4 = today.subtract(const Duration(days: 4));
+      final dayMinus3 = today.subtract(const Duration(days: 3));
+
+      when(() => repository.readUserRecords()).thenAnswer(
+        (_) async => UserRecords({
+          dayMinus4.toIso8601String(): UserDailyRecord(
+            date: dayMinus4,
+            histories: TestModels.winOneTry,
+            correctAnswer: 'GITA',
+            correct: true,
+          ),
+          dayMinus3.toIso8601String(): UserDailyRecord(
+            date: dayMinus3,
+            histories: TestModels.winOneTry,
+            correctAnswer: 'GITA',
+            correct: true,
+          ),
+          today.toIso8601String(): UserDailyRecord(
+            date: dayMinus3,
+            histories: TestModels.winTwoTries,
+            correctAnswer: 'GITA',
+            correct: true,
+          ),
+        }),
+      );
+    },
+    build: () => bloc,
+    act: (bloc) => bloc.add(const LoadUserStatistic()),
+    expect: () => [
+      const StatisticLoadingState(),
+      const StatisticLoadedState(
+        UserStatistic(
+          gamesPlayed: 3,
+          winPercentage: 100,
+          winStreak: 1,
+          maxWinStreak: 2,
+        ),
+      ),
     ],
   );
 
