@@ -23,6 +23,7 @@ class StatisticDialog extends StatelessWidget {
       child: BlocProvider(
         create: (context) => StatisticBloc(
           context.read<WotlaRepository>(),
+          DateProvider(),
         )..add(const LoadUserStatistic()),
         child: const StatisticDialogView(),
       ),
