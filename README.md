@@ -5,15 +5,8 @@ WOTLA - Tebak Member JKT48
 [![Deploy to Production Firebase Hosting](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-prod.yml/badge.svg)](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-prod.yml)
 [![Deploy to Dev Hosting](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-dev.yml/badge.svg?branch=dev)](https://github.com/LittleFireflies/wotla/actions/workflows/firebase-deploy-dev.yml)
 
-## Getting Started
+## Overview
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+WOTLA merupakan permainan adaptasi dari wordle, katla, dan sejenisnya untuk menebak nama panggilan member JKT48.
+<img width="300" alt="image" src="https://user-images.githubusercontent.com/14922088/162601590-55c6ab29-fada-4c04-bd43-42da436fbb57.png">
+<img width="300" alt="image" src="https://user-images.githubusercontent.com/14922088/162601656-51523651-5489-4376-996b-e271651f8cda.png">
