@@ -58,7 +58,8 @@ class HowToDialog extends StatelessWidget {
             Divider(),
             SizedBox(height: 8),
             Text(
-                'Menemukan bug, ada pertanyaan, atau saran fitur? Sampaikan ke DM @widdyjp di twitter ya :)')
+              'Menemukan bug, ada pertanyaan, atau saran fitur? Sampaikan ke DM @widdyjp di twitter ya :)',
+            )
           ],
         ),
       ),
