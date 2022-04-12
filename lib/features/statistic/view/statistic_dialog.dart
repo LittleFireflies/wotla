@@ -56,6 +56,7 @@ class StatisticDialogView extends StatelessWidget {
           if (state is StatisticLoadedState) {
             return Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,6 +101,106 @@ class StatisticDialogView extends StatelessWidget {
                           const Text(
                             'Max Win Streak',
                             textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const Text(
+                  'Distribusi Jawaban',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          Text('1'),
+                          const SizedBox(width: 8),
+                          Container(
+                            color: Colors.grey,
+                            width: 100,
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '0',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          Text('1'),
+                          const SizedBox(width: 8),
+                          Container(
+                            color: Colors.grey,
+                            width: 100,
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '0',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          Text('1'),
+                          const SizedBox(width: 8),
+                          Container(
+                            color: Colors.grey,
+                            width: 100,
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '0',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          Text('1'),
+                          const SizedBox(width: 8),
+                          Container(
+                            color: Colors.grey,
+                            width: 100,
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '0',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          Text('1'),
+                          const SizedBox(width: 8),
+                          Container(
+                            color: Colors.grey,
+                            width: 100,
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '0',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
