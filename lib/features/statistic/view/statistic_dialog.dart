@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +56,11 @@ class StatisticDialogView extends StatelessWidget {
       content: BlocBuilder<StatisticBloc, StatisticState>(
         builder: (context, state) {
           if (state is StatisticLoadedState) {
+            final maxDistributions = state.answerDistributions.entries
+                .map((e) => e.value)
+                .reduce(max);
+            // var oldestUser = users.reduce((currentUser, nextUser) => currentUser['age'] > nextUser['age'] ? currentUser : nextUser)
+
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,100 +120,41 @@ class StatisticDialogView extends StatelessWidget {
                   'Distribusi Jawaban',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 4),
                 Column(
-                  children: [
-                    Padding(
+                  children: state.answerDistributions.entries.map((answer) {
+                    const minRatio = 0.10;
+                    double ratio = answer.value / maxDistributions;
+                    if (ratio.isNaN) {
+                      ratio = minRatio;
+                    }
+
+                    return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Row(
                         children: [
-                          Text('1'),
+                          Text('${answer.key}'),
                           const SizedBox(width: 8),
-                          Container(
-                            color: Colors.grey,
-                            width: 100,
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '0',
-                              style: TextStyle(color: Colors.white),
+                          Expanded(
+                            child: FractionallySizedBox(
+                              alignment: Alignment.topLeft,
+                              widthFactor: [minRatio, ratio].reduce(max),
+                              child: Container(
+                                color: Colors.blueGrey,
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  '${answer.value}',
+                                  style: const TextStyle(color: Colors.white),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        children: [
-                          Text('1'),
-                          const SizedBox(width: 8),
-                          Container(
-                            color: Colors.grey,
-                            width: 100,
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '0',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        children: [
-                          Text('1'),
-                          const SizedBox(width: 8),
-                          Container(
-                            color: Colors.grey,
-                            width: 100,
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '0',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        children: [
-                          Text('1'),
-                          const SizedBox(width: 8),
-                          Container(
-                            color: Colors.grey,
-                            width: 100,
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '0',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Row(
-                        children: [
-                          Text('1'),
-                          const SizedBox(width: 8),
-                          Container(
-                            color: Colors.grey,
-                            width: 100,
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '0',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    );
+                  }).toList(),
+                )
               ],
             );
           } else if (state is StatisticLoadErrorState) {
