@@ -14,11 +14,18 @@ class StatisticLoadingState extends StatisticState {
 
 class StatisticLoadedState extends StatisticState {
   final UserStatistic statistic;
+  final Map<int, int> answerDistributions;
 
-  const StatisticLoadedState(this.statistic);
+  const StatisticLoadedState({
+    required this.statistic,
+    required this.answerDistributions,
+  });
 
   @override
-  List<Object?> get props => [statistic];
+  List<Object?> get props => [
+        statistic,
+        answerDistributions,
+      ];
 }
 
 class StatisticLoadErrorState extends StatisticState {

@@ -5,7 +5,6 @@ import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/features/statistic/bloc/statistic_bloc.dart';
 import 'package:wotla/features/statistic/bloc/statistic_event.dart';
 import 'package:wotla/features/statistic/bloc/statistic_state.dart';
-import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/models/user_records.dart';
 import 'package:wotla/data/models/user_statistic.dart';
@@ -25,50 +24,19 @@ void main() {
   final today = DateTime(2022, 4, 4);
   final UserDailyRecord dailyRecord = UserDailyRecord(
     date: today,
-    histories: const [
-      AnswerHistory(
-        answer: 'GITA',
-        answerIdentifier: 'GITA',
-      ),
-    ],
+    histories: TestModels.winOneTry,
     correct: true,
     correctAnswer: 'GITA',
   );
   final UserDailyRecord yesterdayDailyRecord = UserDailyRecord(
     date: today.subtract(const Duration(days: 1)),
-    histories: const [
-      AnswerHistory(
-        answer: 'GITA',
-        answerIdentifier: 'GITA',
-      ),
-    ],
+    histories: TestModels.winOneTry,
     correct: true,
     correctAnswer: 'GITA',
   );
   final UserDailyRecord twoDaysAgoRecord = UserDailyRecord(
     date: today.subtract(const Duration(days: 2)),
-    histories: const [
-      AnswerHistory(
-        answer: 'GABY',
-        answerIdentifier: 'G+XX',
-      ),
-      AnswerHistory(
-        answer: 'GABY',
-        answerIdentifier: 'G+XX',
-      ),
-      AnswerHistory(
-        answer: 'GABY',
-        answerIdentifier: 'G+XX',
-      ),
-      AnswerHistory(
-        answer: 'GABY',
-        answerIdentifier: 'G+XX',
-      ),
-      AnswerHistory(
-        answer: 'GABY',
-        answerIdentifier: 'G+XX',
-      ),
-    ],
+    histories: TestModels.failedGame,
     correct: false,
     correctAnswer: 'GITA',
   );
@@ -99,12 +67,19 @@ void main() {
     expect: () => [
       const StatisticLoadingState(),
       const StatisticLoadedState(
-        UserStatistic(
+        statistic: UserStatistic(
           gamesPlayed: 3,
           winPercentage: 66,
           winStreak: 2,
           maxWinStreak: 2,
         ),
+        answerDistributions: {
+          1: 2,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+        },
       ),
     ],
   );
@@ -121,12 +96,19 @@ void main() {
     expect: () => [
       const StatisticLoadingState(),
       const StatisticLoadedState(
-        UserStatistic(
+        statistic: UserStatistic(
           gamesPlayed: 0,
           winPercentage: 0,
           winStreak: 0,
           maxWinStreak: 0,
         ),
+        answerDistributions: {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+        },
       ),
     ],
   );
@@ -166,7 +148,7 @@ void main() {
           ),
           dayMinus3.toIso8601String(): UserDailyRecord(
             date: dayMinus3,
-            histories: TestModels.winOneTry,
+            histories: TestModels.winThreeTries,
             correctAnswer: 'GITA',
             correct: true,
           ),
@@ -184,12 +166,19 @@ void main() {
     expect: () => [
       const StatisticLoadingState(),
       const StatisticLoadedState(
-        UserStatistic(
+        statistic: UserStatistic(
           gamesPlayed: 3,
           winPercentage: 100,
           winStreak: 1,
           maxWinStreak: 2,
         ),
+        answerDistributions: {
+          1: 1,
+          2: 1,
+          3: 1,
+          4: 0,
+          5: 0,
+        },
       ),
     ],
   );
