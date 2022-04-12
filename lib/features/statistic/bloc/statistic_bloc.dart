@@ -30,6 +30,13 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
 
     try {
       final userRecords = await _repository.readUserRecords();
+      final answerDistributions = <int, int>{
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+      };
 
       if (userRecords != null) {
         final completedGames = userRecords.records.exclude(
@@ -55,25 +62,32 @@ class StatisticBloc extends Bloc<StatisticEvent, StatisticState> {
           filledRecords.entries.map((e) => e.value.correct).toList(),
         );
 
+        winGamesRecord.forEach((key, value) {
+          answerDistributions[value.histories.length] =
+              (answerDistributions[value.histories.length] ?? 0) + 1;
+        });
+
         emit(
           StatisticLoadedState(
-            UserStatistic(
+            statistic: UserStatistic(
               gamesPlayed: gamesPlayed,
               winPercentage: winPercentage,
               winStreak: latestWinStreak,
               maxWinStreak: maxWinStreak,
             ),
+            answerDistributions: answerDistributions,
           ),
         );
       } else {
         emit(
-          const StatisticLoadedState(
-            UserStatistic(
+          StatisticLoadedState(
+            statistic: const UserStatistic(
               gamesPlayed: 0,
               winPercentage: 0,
               winStreak: 0,
               maxWinStreak: 0,
             ),
+            answerDistributions: answerDistributions,
           ),
         );
       }
