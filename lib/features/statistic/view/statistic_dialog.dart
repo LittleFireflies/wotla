@@ -61,7 +61,6 @@ class StatisticDialogView extends StatelessWidget {
             final maxDistributions = state.answerDistributions.entries
                 .map((e) => e.value)
                 .reduce(max);
-            // var oldestUser = users.reduce((currentUser, nextUser) => currentUser['age'] > nextUser['age'] ? currentUser : nextUser)
 
             return Column(
               mainAxisSize: MainAxisSize.min,
