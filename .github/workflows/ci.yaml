@@ -1,5 +1,6 @@
 name: wotla CI
 on: workflow_call
+
 jobs:
   cancel_previous_runs:
     if: ${{ github.event_name == 'pull_request' }}
