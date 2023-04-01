@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:share_plus/share_plus.dart';
@@ -61,7 +63,7 @@ class _WotlaInputState extends State<WotlaInput> {
             children: [
               Text(
                 '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
@@ -82,7 +84,22 @@ class _WotlaInputState extends State<WotlaInput> {
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 onPressed: () {
-                  Share.share(_getShareText(state.history, state.correct));
+                  if (defaultTargetPlatform == TargetPlatform.iOS ||
+                      defaultTargetPlatform == TargetPlatform.android) {
+                    Share.share(_getShareText(state.history, state.correct));
+                  } else {
+                    Clipboard.setData(
+                      ClipboardData(
+                        text: _getShareText(state.history, state.correct),
+                      ),
+                    ).then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Disalin ke clipboard'),
+                        ),
+                      );
+                    });
+                  }
                 },
                 icon: const Icon(Icons.share),
                 label: const Text('Share'),
