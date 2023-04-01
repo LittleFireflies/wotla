@@ -63,7 +63,7 @@ class _WotlaInputState extends State<WotlaInput> {
             children: [
               Text(
                 '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
