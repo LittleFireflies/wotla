@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wotla/features/game/bloc/game_event.dart';
-import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
+import 'package:wotla/features/game/bloc/game_event.dart';
+import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/utils/const.dart';
 import 'package:wotla/utils/string_extension.dart';
 
@@ -62,7 +62,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         ];
         final attempts = state.attempts + 1;
 
-        final correct = result == state.answer;
+        final correct = result == state.correctAnswer.toUpperCase();
 
         _repository.saveTodayRecord(
           UserDailyRecord(

@@ -1,14 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wotla/features/game/bloc/game_bloc.dart';
-import 'package:wotla/features/game/bloc/game_event.dart';
-import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/data/data_source.dart';
 import 'package:wotla/data/models/answer_history.dart';
 import 'package:wotla/data/models/user_daily_record.dart';
 import 'package:wotla/data/providers/date_provider.dart';
 import 'package:wotla/data/repositories/wotla_repository.dart';
+import 'package:wotla/features/game/bloc/game_bloc.dart';
+import 'package:wotla/features/game/bloc/game_event.dart';
+import 'package:wotla/features/game/bloc/game_state.dart';
 import 'package:wotla/utils/const.dart';
 
 class MockDataSource extends Mock implements DataSource {}
@@ -232,7 +232,7 @@ void main() {
       );
     });
 
-    test('test answer with different length length', () {
+    test('test answer with different length', () {
       expect(
         'XEXXX+',
         wotla.checkAnswer('Beby'.toUpperCase(), 'Celine'.toUpperCase()),
@@ -246,5 +246,71 @@ void main() {
         wotla.checkAnswer('Gita'.toUpperCase(), 'Angga'.toUpperCase()),
       );
     });
+  });
+
+  group('edge cases', () {
+    late GameBloc bloc;
+
+    setUp(() {
+      bloc = GameBloc(
+        dataSource: dataSource,
+        repository: repository,
+        dateProvider: dateProvider,
+      );
+    });
+
+    test('Correct answer contains user answer', () {
+      expect(
+        'ELI',
+        bloc.checkAnswer('Elin'.toUpperCase(), 'Eli'.toUpperCase()),
+      );
+    });
+
+    blocTest<GameBloc, GameState>(
+      'should emit valid state '
+      'and mark as incorrect'
+      'when InputSubmitted event is added '
+      'and user answer is Eli '
+      'and correct answer is Elin '
+      '(correct answer contains user answer)',
+      setUp: () {
+        when(() => dataSource.getAnswer()).thenReturn('Elin');
+
+        bloc = GameBloc(
+          dataSource: dataSource,
+          repository: repository,
+          dateProvider: dateProvider,
+        );
+
+        when(() => dataSource.loadMemberList())
+            .thenReturn(['GITA', 'MARSHA', 'CHRISTY', 'GABY', 'ELIN', 'ELI']);
+        when(() => dateProvider.today).thenReturn(DateTime(2022, 4, 4));
+        when(() => dateProvider.tomorrow).thenReturn(DateTime(2022, 4, 5));
+
+        when(() => repository.saveTodayRecord(any()))
+            .thenAnswer((invocation) => Future.value());
+      },
+      build: () => bloc,
+      act: (bloc) => bloc
+        ..add(const InputChanged('Eli'))
+        ..add(const InputSubmitted()),
+      expect: () => [
+        const GameState(
+          answer: 'ELI',
+          correctAnswer: 'Elin',
+          history: [],
+        ),
+        GameState(
+          answer: 'ELI',
+          correctAnswer: 'Elin',
+          history: const [
+            AnswerHistory(answer: 'ELI', answerIdentifier: 'ELI'),
+          ],
+          attempts: 1,
+          correct: false,
+          nextGameTime: dateProvider.tomorrow,
+        ),
+      ],
+    );
   });
 }
