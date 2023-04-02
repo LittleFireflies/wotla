@@ -76,52 +76,75 @@ class GameView extends StatelessWidget {
           child: Center(
             child: SizedBox(
               width: 480,
-              child: BlocConsumer<GameBloc, GameState>(
-                listener: (context, state) {
-                  final error = state.error;
-                  if (error != null) {
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text(error),
-                          dismissDirection: DismissDirection.horizontal,
-                        ),
-                      );
-                  }
-                },
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: CustomScrollView(
-                          slivers: [
-                            SliverToBoxAdapter(
-                              child: Image.network(
-                                'https://jkt48.com/images/oglogo.png',
-                                height: 200,
-                              ),
+              child: MultiBlocListener(
+                listeners: [
+                  BlocListener<GameBloc, GameState>(
+                    listener: (context, state) {
+                      final error = state.error;
+                      if (error != null) {
+                        ScaffoldMessenger.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(error),
+                              dismissDirection: DismissDirection.horizontal,
                             ),
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                                  final history = state.history[index];
+                          );
+                      }
+                    },
+                  ),
+                  BlocListener<GameBloc, GameState>(
+                    listenWhen: (prev, curr) =>
+                        curr.triggerAlmost != prev.triggerAlmost,
+                    listener: (context, state) {
+                      if (state.triggerAlmost) {
+                        ScaffoldMessenger.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              content: Text('Hampir!'),
+                              dismissDirection: DismissDirection.horizontal,
+                            ),
+                          );
+                      }
+                    },
+                  ),
+                ],
+                child: BlocBuilder<GameBloc, GameState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: CustomScrollView(
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Image.network(
+                                  'https://jkt48.com/images/oglogo.png',
+                                  height: 200,
+                                ),
+                              ),
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    final history = state.history[index];
 
-                                  return AnswerCard(
-                                    answer: history.answer,
-                                    answerIdentifier: history.answerIdentifier,
-                                  );
-                                },
-                                childCount: state.history.length,
+                                    return AnswerCard(
+                                      answer: history.answer,
+                                      answerIdentifier:
+                                          history.answerIdentifier,
+                                    );
+                                  },
+                                  childCount: state.history.length,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const WotlaInput(),
-                    ],
-                  );
-                },
+                        const WotlaInput(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
