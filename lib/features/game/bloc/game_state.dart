@@ -9,6 +9,7 @@ class GameState extends Equatable {
   final bool correct;
   final String? error;
   final DateTime? nextGameTime;
+  final bool triggerAlmost;
 
   const GameState({
     this.answer = '',
@@ -18,6 +19,7 @@ class GameState extends Equatable {
     this.correct = false,
     this.error,
     this.nextGameTime,
+    this.triggerAlmost = false,
   });
 
   GameState copyWith({
@@ -28,6 +30,7 @@ class GameState extends Equatable {
     String? error,
     String? correctAnswer,
     DateTime? nextGameTime,
+    bool? triggerAlmost,
   }) {
     return GameState(
       answer: answer ?? this.answer,
@@ -37,6 +40,7 @@ class GameState extends Equatable {
       correct: correct ?? this.correct,
       error: error,
       nextGameTime: nextGameTime ?? this.nextGameTime,
+      triggerAlmost: triggerAlmost ?? false,
     );
   }
 
@@ -49,5 +53,6 @@ class GameState extends Equatable {
         correct,
         error,
         nextGameTime,
+        triggerAlmost,
       ];
 }

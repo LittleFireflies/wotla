@@ -64,6 +64,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
         final correct = result == state.correctAnswer.toUpperCase();
 
+        final triggerAlmost = !correct && result == state.answer;
+
         _repository.saveTodayRecord(
           UserDailyRecord(
             histories: history,
@@ -79,6 +81,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             attempts: attempts,
             correct: correct,
             nextGameTime: _dateProvider.tomorrow,
+            triggerAlmost: triggerAlmost,
           ),
         );
       }

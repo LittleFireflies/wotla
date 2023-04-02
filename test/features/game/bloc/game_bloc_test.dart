@@ -309,6 +309,7 @@ void main() {
           attempts: 1,
           correct: false,
           nextGameTime: dateProvider.tomorrow,
+          triggerAlmost: true,
         ),
       ],
     );
