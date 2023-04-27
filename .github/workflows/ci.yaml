@@ -20,7 +20,9 @@ jobs:
         uses: dart-code-checker/dart-code-metrics-action@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
+          fatal_warnings: true
+          fatal_performance: true
+  
   test:
     runs-on: ubuntu-latest
     steps:
