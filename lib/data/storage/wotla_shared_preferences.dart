@@ -18,8 +18,9 @@ class WotlaSharedPreferences {
   Future<UserRecords?> readUserRecords() async {
     final prefs = await sharedPreferences;
     final Map<String, dynamic> userJson =
-        json.decode(prefs.getString(_userRecordsKey) ?? "{}");
+    json.decode(prefs.getString(_userRecordsKey) ?? "{}");
 
+    // TODO: Prefer conditional expression
     if (userJson.isEmpty) {
       return null;
     } else {
