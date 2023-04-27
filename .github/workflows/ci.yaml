@@ -14,16 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Flutter
-        uses: subosito/flutter-action@master
-        with:
-          channel: stable
-      - name: Install dependencies
-        run: flutter pub get
+      - uses: subosito/flutter-action@v2
       - run: flutter analyze
       - name: Run dart code metrics
-        # --fatal-style --fatal-warnings
-        run: flutter pub run dart_code_metrics:metrics lib --fatal-performance --reporter=github
+        uses: dart-code-checker/dart-code-metrics-action@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: ubuntu-latest
