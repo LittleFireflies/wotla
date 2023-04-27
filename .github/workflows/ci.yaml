@@ -18,7 +18,7 @@ jobs:
       - run: flutter analyze
       - name: Run dart code metrics
         # --fatal-style --fatal-warnings
-        run: flutter pub run dart_code_metrics:metrics lib --fatal-performance
+        run: flutter pub run dart_code_metrics:metrics lib --fatal-performance --reporter=github
 
   test:
     runs-on: ubuntu-latest
