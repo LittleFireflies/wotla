@@ -32,6 +32,9 @@ linter:
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
 dart_code_metrics:
+  anti-patterns:
+    - long-method
+    - long-parameter-list
   metrics:
     cyclomatic-complexity: 20
     number-of-parameters: 4
