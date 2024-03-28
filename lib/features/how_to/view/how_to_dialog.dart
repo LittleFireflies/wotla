@@ -20,11 +20,11 @@ class HowToDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: SingleChildScrollView(
+      content: const SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'Tebak WOTLA dalam ${WotlaConst.maxAttempt} kesempatan.',
             ),
@@ -59,7 +59,7 @@ class HowToDialog extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Menemukan bug, ada pertanyaan, atau saran fitur? Sampaikan ke DM @widdyjp di twitter ya :)',
-            )
+            ),
           ],
         ),
       ),

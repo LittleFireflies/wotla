@@ -118,8 +118,8 @@ class GameView extends StatelessWidget {
                           child: CustomScrollView(
                             slivers: [
                               SliverToBoxAdapter(
-                                child: Image.network(
-                                  'https://jkt48.com/images/oglogo.png',
+                                child: Image.asset(
+                                  'images/logo.png',
                                   height: 200,
                                 ),
                               ),
