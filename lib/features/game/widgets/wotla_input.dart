@@ -55,7 +55,7 @@ class _WotlaInputState extends State<WotlaInput> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(36),
                     ),
-                  )
+                  ),
                 ],
               )
             : Column(
@@ -111,7 +111,7 @@ class _WotlaInputState extends State<WotlaInput> {
                     },
                     icon: const Icon(Icons.share),
                     label: const Text('Share'),
-                  )
+                  ),
                 ],
               );
       },

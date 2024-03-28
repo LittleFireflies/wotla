@@ -58,7 +58,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
             checkAnswer(state.correctAnswer.toUpperCase(), state.answer);
         final history = [
           ...state.history,
-          AnswerHistory(answer: state.answer, answerIdentifier: result)
+          AnswerHistory(answer: state.answer, answerIdentifier: result),
         ];
         final attempts = state.attempts + 1;
 
