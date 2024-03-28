@@ -131,7 +131,7 @@ void main() {
         // arrange
         when(() => sharedPreferences.readUserRecords()).thenAnswer(
           (_) async => UserRecords({
-            yesterdayDailyRecord.date.toIso8601String(): yesterdayDailyRecord
+            yesterdayDailyRecord.date.toIso8601String(): yesterdayDailyRecord,
           }),
         );
         // act

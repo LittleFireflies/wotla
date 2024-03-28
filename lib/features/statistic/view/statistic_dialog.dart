@@ -116,15 +116,15 @@ class StatisticDialogView extends StatelessWidget {
                       value: answer.value.toString(),
                     );
                   }).toList(),
-                )
+                ),
               ],
             );
           } else if (state is StatisticLoadErrorState) {
             return Text(state.message);
           } else {
-            return Column(
+            return const Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 CircularProgressIndicator(),
               ],
             );

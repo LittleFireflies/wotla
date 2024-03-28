@@ -84,7 +84,7 @@ void main() {
       GameState(
         answer: 'GITA',
         history: const [
-          AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA')
+          AnswerHistory(answer: 'GITA', answerIdentifier: 'GITA'),
         ],
         attempts: 1,
         correctAnswer: correctAnswer,
@@ -118,7 +118,7 @@ void main() {
       GameState(
         answer: 'GABY',
         history: const [
-          AnswerHistory(answer: 'GABY', answerIdentifier: 'G+XX')
+          AnswerHistory(answer: 'GABY', answerIdentifier: 'G+XX'),
         ],
         attempts: 1,
         correctAnswer: correctAnswer,
