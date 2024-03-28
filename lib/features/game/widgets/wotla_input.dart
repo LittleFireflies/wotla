@@ -27,86 +27,93 @@ class _WotlaInputState extends State<WotlaInput> {
   Widget build(BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
       builder: (context, state) {
-        if (state.attempts < WotlaConst.maxAttempt && !state.correct) {
-          return Column(
-            children: [
-              TextField(
-                controller: _inputController,
-                onSubmitted: (answer) {
-                  context.read<GameBloc>().add(const InputSubmitted());
-                  _inputController.text = '';
-                },
-                onChanged: (answer) {
-                  context.read<GameBloc>().add(InputChanged(answer));
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Tebak di sini',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<GameBloc>().add(const InputSubmitted());
-                  _inputController.text = '';
-                  FocusScope.of(context).unfocus();
-                },
-                child: const Text('Tebak'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(36),
-                ),
-              ),
-            ],
-          );
-        } else {
-          return Column(
-            children: [
-              Text(
-                '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
-                style: Theme.of(context).textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              CountdownTimer(
-                endTime: state.nextGameTime?.millisecondsSinceEpoch ??
-                    DateProvider().tomorrow.millisecondsSinceEpoch,
-                widgetBuilder: (context, time) {
-                  if (time == null) {
-                    return const Text(
-                      'Silakan ulang dengan me-restart halaman web',
-                    );
-                  }
-                  return Text(
-                    'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(2, '0')} : ${time.sec.toString().padLeft(2, '0')}',
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (defaultTargetPlatform == TargetPlatform.iOS ||
-                      defaultTargetPlatform == TargetPlatform.android) {
-                    Share.share(_getShareText(state.history, state.correct));
-                  } else {
-                    Clipboard.setData(
-                      ClipboardData(
-                        text: _getShareText(state.history, state.correct),
-                      ),
-                    ).then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Disalin ke clipboard'),
-                        ),
+        return state.attempts < WotlaConst.maxAttempt && !state.correct
+            ? Column(
+                children: [
+                  TextField(
+                    controller: _inputController,
+                    onSubmitted: (answer) {
+                      context.read<GameBloc>().add(const InputSubmitted());
+                      _inputController.text = '';
+                    },
+                    onChanged: (answer) {
+                      context.read<GameBloc>().add(InputChanged(answer));
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'Tebak di sini',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<GameBloc>().add(const InputSubmitted());
+                      _inputController.text = '';
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: const Text('Tebak'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(36),
+                    ),
+                  )
+                ],
+              )
+            : Column(
+                children: [
+                  Text(
+                    '${state.correct ? "Kamu Benar 🎉🎉" : "Kesempatanmu habis 😔😔"}\nJawabannya: ${state.correctAnswer}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  CountdownTimer(
+                    endTime: state.nextGameTime?.millisecondsSinceEpoch ??
+                        DateProvider().tomorrow.millisecondsSinceEpoch,
+                    widgetBuilder: (context, time) {
+                      if (time == null) {
+                        return const Text(
+                          'Silakan ulang dengan me-restart halaman web',
+                        );
+                      }
+
+                      return Text(
+                        'Member baru akan muncul lagi dalam: ${time.hours.toString().padLeft(2, '0')} : ${time.min.toString().padLeft(
+                              2,
+                              '0',
+                            )} : ${time.sec.toString().padLeft(2, '0')}',
                       );
-                    });
-                  }
-                },
-                icon: const Icon(Icons.share),
-                label: const Text('Share'),
-              ),
-            ],
-          );
-        }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      if (defaultTargetPlatform == TargetPlatform.iOS ||
+                          defaultTargetPlatform == TargetPlatform.android) {
+                        Share.share(
+                          _getShareText(state.history, state.correct),
+                        );
+                      } else {
+                        Clipboard.setData(
+                          ClipboardData(
+                            text: _getShareText(
+                              state.history,
+                              state.correct,
+                            ),
+                          ),
+                        ).then((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Disalin ke clipboard'),
+                            ),
+                          );
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.share),
+                    label: const Text('Share'),
+                  )
+                ],
+              );
       },
     );
   }
